@@ -70,7 +70,7 @@ const CATEGORIES: Category[] = [
     sub: 'Проверенные устройства',
     href: '/used',
     imgSrc:
-      'https://xn--80abvjddo3a.xn--p1ai/wa-data/public/shop/categories/151/15.png',
+      'https://basestock.ru/media/catalog/11111111-0001-0001-0001-000000000001/3b64e3a140ed4520b4a968d77a93bde7.jpg',
     imgAlt: 'Техника Б/У',
     bg: '#1a3a2a',
   },
@@ -146,7 +146,7 @@ export default function CategoryGrid() {
                         src={cat.imgSrc}
                         alt={cat.imgAlt}
                         fill
-                        className={`object-contain${cat.textDark ? ' mix-blend-multiply' : ' mix-blend-screen'}`}
+                        className={`object-contain${cat.textDark ? ' mix-blend-multiply' : ''}`}
                         sizes="(max-width: 768px) 45vw, 30vw"
                         unoptimized
                       />
