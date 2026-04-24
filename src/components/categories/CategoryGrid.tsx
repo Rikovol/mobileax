@@ -146,7 +146,7 @@ export default function CategoryGrid() {
                         src={cat.imgSrc}
                         alt={cat.imgAlt}
                         fill
-                        className="object-contain"
+                        className={`object-contain${cat.textDark ? ' mix-blend-multiply' : ''}`}
                         sizes="(max-width: 768px) 45vw, 30vw"
                         unoptimized
                       />

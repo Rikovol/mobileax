@@ -255,7 +255,7 @@ export default function HeroSlider() {
                   src={slide.imgSrc}
                   alt={slide.imgAlt}
                   fill
-                  className="object-contain relative z-10 drop-shadow-2xl"
+                  className={`object-contain relative z-10 drop-shadow-2xl${slide.textDark ? ' mix-blend-multiply' : ''}`}
                   sizes="(max-width: 768px) 240px, (max-width: 1024px) 340px, 420px"
                   priority={current === 0}
                   unoptimized

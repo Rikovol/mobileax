@@ -30,7 +30,7 @@ export default function ProductGallery({ photos, name }: Props) {
           src={active.url}
           alt={`${name} — фото ${activeIdx + 1}`}
           fill
-          className="object-contain p-8 transition-opacity duration-300"
+          className="object-contain p-8 transition-opacity duration-300 mix-blend-multiply"
           sizes="(max-width: 768px) 100vw, 50vw"
           priority={activeIdx === 0}
         />
@@ -56,7 +56,7 @@ export default function ProductGallery({ photos, name }: Props) {
                   src={photo.url}
                   alt={`${name} thumbnail ${idx + 1}`}
                   fill
-                  className="object-contain p-1"
+                  className="object-contain p-1 mix-blend-multiply"
                   sizes="64px"
                 />
               </div>

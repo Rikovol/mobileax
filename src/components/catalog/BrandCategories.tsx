@@ -103,7 +103,7 @@ export default function BrandCategories() {
                       src={cat.imgSrc}
                       alt={cat.imgAlt}
                       fill
-                      className="object-contain"
+                      className="object-contain mix-blend-multiply"
                       sizes="78px"
                       unoptimized
                     />
