@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.basestock.ru',
       },
+      {
+        protocol: 'https',
+        hostname: 'xn--80abvjddo3a.xn--p1ai',
+      },
     ],
   },
 };
