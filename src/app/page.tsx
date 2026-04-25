@@ -1,5 +1,6 @@
 import { fetchBrands } from '@/lib/phonebase-client';
 import HeroSlider from '@/components/hero/HeroSlider';
+import ShopLatestScroller from '@/components/scroller/ShopLatestScroller';
 import TrustBar from '@/components/trust/TrustBar';
 import CategoryGrid from '@/components/categories/CategoryGrid';
 import HighlightCards from '@/components/highlights/HighlightCards';
@@ -29,13 +30,16 @@ export default async function HomePage() {
       {/* 1. Hero slider — full-bleed, Apple-level */}
       <HeroSlider />
 
-      {/* 2. Trust bar — 4 преимущества */}
+      {/* 2. Shop latest — horizontal product scroller (Apple data-core-scroller-platter style) */}
+      <ShopLatestScroller />
+
+      {/* 3. Trust bar — 4 преимущества */}
       <TrustBar />
 
-      {/* 3. Category grid — Apple «Shop by category» */}
+      {/* 4. Category grid — Apple «Shop by category» */}
       <CategoryGrid />
 
-      {/* 4. Популярное — новые товары из phonebase */}
+      {/* 5. Популярное — новые товары из phonebase */}
       <FeaturedProducts
         title="Популярное"
         subtitle="Только что поступили в продажу"
@@ -45,10 +49,10 @@ export default async function HomePage() {
         limit={8}
       />
 
-      {/* 5. Highlights — Trade-In / Рассрочка / Б/У */}
+      {/* 6. Highlights — Trade-In / Рассрочка / Б/У */}
       <HighlightCards />
 
-      {/* 6. Б/У техника */}
+      {/* 7. Б/У техника */}
       <FeaturedProducts
         title="Техника Б/У"
         subtitle="Проверенные устройства с гарантией магазина"
@@ -58,7 +62,7 @@ export default async function HomePage() {
         limit={4}
       />
 
-      {/* 7. Help section — «Нужна помощь с покупкой?» */}
+      {/* 8. Help section — «Нужна помощь с покупкой?» */}
       <HelpSection />
     </>
   );
