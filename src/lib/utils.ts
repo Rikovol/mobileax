@@ -21,6 +21,23 @@ export function discountLabel(discountPercent: number | null): string | null {
   return `-${discountPercent}%`;
 }
 
+/**
+ * Перевод сырого `sim_type` из phonebase в читаемый русский ярлык.
+ * Возможные значения от API: 'eSIM-only', 'SIM+eSIM', '2-SIM', '1-SIM',
+ * 'Dual SIM', null. Возвращает null если значение пустое/неизвестное —
+ * вызывающий код сам решает, рендерить ли строку.
+ */
+export function formatSimType(simType: string | null | undefined): string | null {
+  if (!simType) return null;
+  const v = simType.trim().toLowerCase();
+  if (v === 'esim-only' || v === 'esim only' || v === 'only esim') return 'Только eSIM';
+  if (v === 'sim+esim' || v === 'sim + esim' || v === 'nano-sim+esim') return 'Nano-SIM + eSIM';
+  if (v === '2-sim' || v === 'dual sim' || v === '2 sim') return '2 × Nano-SIM';
+  if (v === '1-sim' || v === '1 sim' || v === 'nano-sim') return 'Nano-SIM';
+  // fallback — показываем как пришло
+  return simType;
+}
+
 /** Resolve media path (`/media/...`) to absolute URL via NEXT_PUBLIC_PHONEBASE_API.
  *  Pass-through for already-absolute URLs and empty values.
  */

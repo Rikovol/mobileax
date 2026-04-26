@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchProduct } from '@/lib/phonebase-client';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, formatSimType } from '@/lib/utils';
 import ProductGallery from '@/components/product/ProductGallery';
 
 export const dynamic = 'force-dynamic';
@@ -232,9 +232,13 @@ export default async function ProductPage({ params }: Props) {
 
             {/* Specs grid */}
             <div className="grid grid-cols-2 gap-3 text-sm mt-2">
-              {product.sim_count != null && (
-                <SpecChip label="SIM" value={`${product.sim_count} ${product.sim_type ?? ''}`} />
-              )}
+              {(() => {
+                const simLabel = formatSimType(product.sim_type);
+                if (simLabel) return <SpecChip label="SIM" value={simLabel} />;
+                if (product.sim_count != null)
+                  return <SpecChip label="SIM" value={String(product.sim_count)} />;
+                return null;
+              })()}
               {product.storage && <SpecChip label="Память" value={product.storage} />}
               {product.color && <SpecChip label="Цвет" value={product.color} />}
               {product.category && <SpecChip label="Тип" value={product.category} />}

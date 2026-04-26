@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import type { CatalogItemOut } from '@/types/api';
-import { formatPrice, discountLabel, mediaUrl } from '@/lib/utils';
+import { formatPrice, discountLabel, mediaUrl, formatSimType } from '@/lib/utils';
 
 interface Props {
   item: CatalogItemOut;
@@ -96,6 +96,13 @@ export default function ProductCard({ item }: Props) {
             <p className="mt-1.5 text-xs text-[var(--color-text-secondary)] flex items-center gap-1">
               <span>🔋</span>
               <span>Батарея {item.battery_pct}</span>
+            </p>
+          )}
+
+          {item.condition === 'new' && formatSimType(item.sim_type) && (
+            <p className="mt-1.5 text-xs text-[var(--color-text-secondary)] flex items-center gap-1">
+              <span>📱</span>
+              <span>{formatSimType(item.sim_type)}</span>
             </p>
           )}
 
