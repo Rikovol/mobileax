@@ -20,7 +20,7 @@ interface HeroProductCard {
 const PRODUCTS: HeroProductCard[] = [
   {
     eyebrow: 'iPhone 17 Pro',
-    title: 'The ultimate iPhone.',
+    title: 'Идеальный iPhone.',
     cta: 'Купить',
     ctaHref: '/catalog/Apple?category=iphone&line=17-pro',
     imgSrc: '/themes/mobileax/heroes/iphone-17-pro.png',
@@ -29,7 +29,7 @@ const PRODUCTS: HeroProductCard[] = [
   },
   {
     eyebrow: 'iPhone 17e',
-    title: 'iPhone in a new key.',
+    title: 'iPhone в новом ключе.',
     cta: 'Купить',
     ctaHref: '/catalog/Apple?category=iphone&line=17',
     imgSrc: '/themes/mobileax/heroes/iphone-17e.png',
