@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function ContactsPage() {
   return (
-    <div className="section-container section-gap">
+    <div className="section-container py-6 md:py-8">
       <LocalBusinessSchema />
       <Breadcrumbs items={[{ label: 'Контакты', href: '/contacts' }]} />
       <nav className="text-sm text-[var(--color-text-secondary)] mb-8 flex items-center gap-2">
@@ -25,8 +25,27 @@ export default function ContactsPage() {
         <span className="text-[var(--color-text)]">Контакты</span>
       </nav>
 
-      <h1 className="hero-title mb-3">Контакты</h1>
-      <p className="hero-subtitle mb-10">Звоните, приходите, пишите.</p>
+      <h1
+        className="font-semibold tracking-tight mb-2"
+        style={{
+          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          letterSpacing: '-0.025em',
+          color: 'var(--color-text)',
+          lineHeight: 1.15,
+        }}
+      >
+        Контакты
+        <span
+          className="ml-2 hidden sm:inline"
+          style={{
+            fontSize: 'clamp(0.8125rem, 1.2vw, 1rem)',
+            fontWeight: 500,
+            color: 'var(--color-text-secondary)',
+          }}
+        >
+          · Звоните, приходите, пишите.
+        </span>
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-12">
         {/* Адрес */}
