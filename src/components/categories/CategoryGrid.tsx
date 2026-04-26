@@ -96,8 +96,9 @@ export default function CategoryGrid() {
           </div>
         </div>
 
-        {/* Scroller — Apple rf-cards-scroller pattern */}
-        <div className="rf-cards-scroller-crop relative overflow-hidden">
+        {/* Scroller — Apple rf-cards-scroller pattern;
+            overflow-x скрыт (для edge-fade), overflow-y видим (чтобы hover-парение не обрезалось) */}
+        <div className="rf-cards-scroller-crop relative" style={{ overflowX: 'hidden', overflowY: 'visible' }}>
           <div
             aria-hidden
             className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 z-10 transition-opacity duration-300"
