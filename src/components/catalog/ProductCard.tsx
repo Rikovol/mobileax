@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import type { CatalogItemOut } from '@/types/api';
-import { formatPrice, discountLabel } from '@/lib/utils';
+import { formatPrice, discountLabel, mediaUrl } from '@/lib/utils';
 
 interface Props {
   item: CatalogItemOut;
@@ -48,7 +48,7 @@ export default function ProductCard({ item }: Props) {
         <div className="aspect-square relative overflow-hidden">
           {item.photo_main ? (
             <Image
-              src={item.photo_main}
+              src={mediaUrl(item.photo_main)}
               alt={name}
               fill
               className="object-contain p-4 transition-transform duration-500 group-hover:scale-105 mix-blend-multiply"

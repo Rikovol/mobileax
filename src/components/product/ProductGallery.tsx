@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { ProductPhotoItem } from '@/types/api';
+import { mediaUrl } from '@/lib/utils';
 
 interface Props {
   photos: ProductPhotoItem[];
@@ -27,7 +28,7 @@ export default function ProductGallery({ photos, name }: Props) {
       {/* Main photo */}
       <div className="aspect-square relative rounded-2xl overflow-hidden bg-[var(--color-bg-secondary)]">
         <Image
-          src={active.url}
+          src={mediaUrl(active.url)}
           alt={`${name} — фото ${activeIdx + 1}`}
           fill
           className="object-contain p-8 transition-opacity duration-300 mix-blend-multiply"
@@ -53,7 +54,7 @@ export default function ProductGallery({ photos, name }: Props) {
             >
               <div className="relative w-full h-full">
                 <Image
-                  src={photo.url}
+                  src={mediaUrl(photo.url)}
                   alt={`${name} thumbnail ${idx + 1}`}
                   fill
                   className="object-contain p-1 mix-blend-multiply"

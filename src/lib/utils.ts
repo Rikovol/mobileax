@@ -20,3 +20,14 @@ export function discountLabel(discountPercent: number | null): string | null {
   if (!discountPercent) return null;
   return `-${discountPercent}%`;
 }
+
+/** Resolve media path (`/media/...`) to absolute URL via NEXT_PUBLIC_PHONEBASE_API.
+ *  Pass-through for already-absolute URLs and empty values.
+ */
+export function mediaUrl(path: string | null | undefined): string {
+  if (!path) return '';
+  // Pass-through for absolute URLs, protocol-relative, and data: URIs
+  if (/^(?:https?:\/\/|\/\/|data:)/.test(path)) return path;
+  const base = process.env.NEXT_PUBLIC_PHONEBASE_API || '';
+  return path.startsWith('/') ? `${base}${path}` : `${base}/${path}`;
+}

@@ -71,10 +71,14 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-10">
           {/* Brand column */}
           <div className="col-span-2">
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-[17px] font-semibold" style={{ color: 'var(--color-text)' }}>
-                {theme.name}
-              </span>
+            <Link href="/" className="inline-block mb-4" aria-label={theme.name}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/themes/mobileax/logo.svg"
+                alt={theme.name}
+                width={120}
+                height={32}
+              />
             </Link>
             <p className="text-[13px] leading-relaxed mb-3" style={{ color: 'var(--color-text-secondary)' }}>
               Смартфоны, планшеты, ноутбуки Apple и Samsung в Орле.

@@ -12,7 +12,6 @@ interface Highlight {
   imgSrc: string;
   imgAlt: string;
   bg: string;
-  textDark?: boolean;
 }
 
 const HIGHLIGHTS: Highlight[] = [
@@ -21,9 +20,8 @@ const HIGHLIGHTS: Highlight[] = [
     title: 'Сдайте старое — получите новое\nсо скидкой.',
     cta: 'Оценить устройство',
     href: '/trade-in',
-    imgSrc:
-      'https://xn--80abvjddo3a.xn--p1ai/wa-data/public/shop/products/30/02/10230/images/11504/11504.240.jpg',
-    imgAlt: 'Trade-In MacBook',
+    imgSrc: '/themes/mobileax/heroes/iphone-17e.jpg',
+    imgAlt: 'Trade-In',
     bg: 'linear-gradient(135deg, #0a2a4a 0%, #1a4a6a 100%)',
   },
   {
@@ -31,9 +29,8 @@ const HIGHLIGHTS: Highlight[] = [
     title: 'Новый iPhone сегодня.\nПлатите потом.',
     cta: 'Узнать условия',
     href: '/delivery',
-    imgSrc:
-      'https://basestock.ru/media/catalog/11111111-0003-0003-0003-000000000003/f3e0b25d2aa04926ba1dbb0b494ccce1.jpg',
-    imgAlt: 'iPhone в рассрочку',
+    imgSrc: '/themes/mobileax/heroes/iphone-17-pro.jpg',
+    imgAlt: 'Рассрочка',
     bg: 'linear-gradient(135deg, #1c1c1e 0%, #3a2a4a 100%)',
   },
   {
@@ -41,9 +38,8 @@ const HIGHLIGHTS: Highlight[] = [
     title: 'Проверенная техника.\nЦена — честная.',
     cta: 'Смотреть б/у',
     href: '/used',
-    imgSrc:
-      'https://basestock.ru/media/catalog/11111111-0001-0001-0001-000000000001/3b64e3a140ed4520b4a968d77a93bde7.jpg',
-    imgAlt: 'Б/У MacBook',
+    imgSrc: '/themes/mobileax/heroes/macbook.jpg',
+    imgAlt: 'Б/У техника',
     bg: 'linear-gradient(135deg, #1a3a2a 0%, #2a5a3a 100%)',
   },
 ];
@@ -55,7 +51,7 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 export default function HighlightCards() {
@@ -67,8 +63,12 @@ export default function HighlightCards() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="text-center font-bold mb-10 md:mb-14"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', letterSpacing: '-0.03em', color: 'var(--color-text)' }}
+          className="text-center font-semibold mb-10 md:mb-14"
+          style={{
+            fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
+            letterSpacing: '-0.03em',
+            color: 'var(--color-text)',
+          }}
         >
           Специальные предложения
         </motion.h2>
@@ -84,31 +84,30 @@ export default function HighlightCards() {
             <motion.div key={card.eyebrow} variants={cardVariants}>
               <Link
                 href={card.href}
-                className="group relative block rounded-3xl overflow-hidden transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
-                style={{ background: card.bg, minHeight: '360px' }}
+                className="group relative block rounded-3xl overflow-hidden transition-transform duration-300 hover:scale-[1.015]"
+                style={{ background: card.bg, minHeight: 380 }}
               >
                 {/* Product image — top right */}
-                <div className="absolute top-6 right-6 w-[130px] h-[150px] md:w-[150px] md:h-[180px]">
+                <div className="absolute top-6 right-6 w-[140px] h-[170px] md:w-[180px] md:h-[220px]">
                   <Image
                     src={card.imgSrc}
                     alt={card.imgAlt}
                     fill
                     className="object-contain transition-transform duration-500 group-hover:scale-105 group-hover:-translate-y-1"
-                    sizes="150px"
-                    unoptimized
+                    sizes="180px"
                   />
                 </div>
 
                 {/* Text — bottom left */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                   <p
-                    className="text-[11px] font-semibold uppercase tracking-[0.12em] mb-2 opacity-60"
+                    className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2 opacity-65"
                     style={{ color: '#fff' }}
                   >
                     {card.eyebrow}
                   </p>
                   <h3
-                    className="font-bold leading-snug mb-5 whitespace-pre-line"
+                    className="font-semibold leading-snug mb-5 whitespace-pre-line"
                     style={{
                       fontSize: 'clamp(1.125rem, 2.5vw, 1.375rem)',
                       color: '#fff',
@@ -119,11 +118,21 @@ export default function HighlightCards() {
                   </h3>
                   <span
                     className="inline-flex items-center gap-1.5 text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-200 group-hover:gap-2.5"
-                    style={{ background: 'rgba(255,255,255,0.18)', color: '#fff', backdropFilter: 'blur(8px)' }}
+                    style={{
+                      background: 'rgba(255,255,255,0.18)',
+                      color: '#fff',
+                      backdropFilter: 'blur(8px)',
+                    }}
                   >
                     {card.cta}
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2.5 6h7m0 0L6 2.5M9.5 6L6 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path
+                        d="M2.5 6h7m0 0L6 2.5M9.5 6L6 9.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </span>
                 </div>

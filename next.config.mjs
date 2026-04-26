@@ -9,6 +9,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'basestock.ru',
+      },
+      {
+        protocol: 'https',
         hostname: '*.basestock.ru',
       },
       {

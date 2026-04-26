@@ -53,20 +53,14 @@ export default function Header() {
           style={{ padding: '0 max(20px, calc((100% - 980px) / 2))' }}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0 mr-8" aria-label={theme.name}>
+          <Link href="/" className="flex items-center shrink-0 mr-8" aria-label={theme.name}>
             <Image
               src="/themes/mobileax/logo.svg"
               alt={theme.name}
-              width={28}
-              height={28}
+              width={120}
+              height={32}
               priority
             />
-            <span
-              className="font-semibold text-[17px] leading-none"
-              style={{ color: 'var(--color-text)' }}
-            >
-              {theme.name}
-            </span>
           </Link>
 
           {/* Desktop nav */}
