@@ -27,10 +27,12 @@ export default function ItemListSchema({ items, name }: Props) {
       url:
         SITE_URL +
         productHref({
+          condition: item.condition,
           brand: item.brand,
           model: item.model,
           storage: item.storage,
           color: item.color,
+          simType: item.sim_type,
           slug: item.slug,
         }),
       name: [item.brand, item.model, item.storage, item.color].filter(Boolean).join(' '),

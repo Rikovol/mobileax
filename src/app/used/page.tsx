@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchCatalog } from '@/lib/phonebase-client';
+import type { CatalogItemOut } from '@/types/api';
 import CatalogClientView from '@/components/catalog/CatalogClientView';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import ItemListSchema from '@/components/seo/ItemListSchema';
@@ -25,23 +26,31 @@ function sp(searchParams: Record<string, string | string[] | undefined>, key: st
   return Array.isArray(val) ? (val[0] ?? '') : (val ?? '');
 }
 
+const PER_PAGE = 60;
+const MAX_PAGES = 3;
+
+async function fetchAllUsed(
+  sort: 'price_asc' | 'price_desc' | 'newest',
+): Promise<CatalogItemOut[]> {
+  const items: CatalogItemOut[] = [];
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    try {
+      const res = await fetchCatalog({ condition: 'used', page, per_page: PER_PAGE, sort });
+      items.push(...res.items);
+      if (res.items.length < PER_PAGE) break;
+    } catch (err) {
+      console.error('[/used] fetchCatalog page=' + page + ' failed:', err);
+      break;
+    }
+  }
+  return items;
+}
+
 export default async function UsedPage({ searchParams }: Props) {
   const sq = await searchParams;
   const sort = (sp(sq, 'sort') as 'price_asc' | 'price_desc' | 'newest') || 'newest';
 
-  let catalog = null;
-  try {
-    catalog = await fetchCatalog({
-      condition: 'used',
-      per_page: 100,
-      page: 1,
-      sort,
-    });
-  } catch {
-    // API not yet connected
-  }
-
-  const items = catalog?.items ?? [];
+  const items = await fetchAllUsed(sort);
 
   return (
     <div className="section-container py-6 md:py-8">
@@ -78,7 +87,6 @@ export default async function UsedPage({ searchParams }: Props) {
           </span>
         </h1>
 
-        {/* Trust pills — компактнее */}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {['Проверка батареи', 'Диагностика', 'Гарантия 30 дней', 'Обмен 14 дней'].map((tag) => (
             <span

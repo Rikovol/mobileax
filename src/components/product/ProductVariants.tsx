@@ -70,10 +70,12 @@ export default function ProductVariants({
                 <Link
                   key={v.storage ?? v.slug}
                   href={productHref({
+                    condition: v.condition,
                     brand: v.brand,
                     model: v.model,
                     storage: v.storage,
                     color: v.color,
+                    simType: v.sim_type,
                     slug: v.slug,
                   })}
                   prefetch={false}
@@ -106,10 +108,12 @@ export default function ProductVariants({
                 <Link
                   key={v.sim_type ?? v.slug}
                   href={productHref({
+                    condition: v.condition,
                     brand: v.brand,
                     model: v.model,
                     storage: v.storage,
                     color: v.color,
+                    simType: v.sim_type,
                     slug: v.slug,
                   })}
                   prefetch={false}
@@ -142,10 +146,12 @@ export default function ProductVariants({
                 <Link
                   key={v.color ?? v.slug}
                   href={productHref({
+                    condition: v.condition,
                     brand: v.brand,
                     model: v.model,
                     storage: v.storage,
                     color: v.color,
+                    simType: v.sim_type,
                     slug: v.slug,
                   })}
                   prefetch={false}

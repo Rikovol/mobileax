@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchCatalog } from '@/lib/phonebase-client';
+import type { CatalogItemOut } from '@/types/api';
 import CatalogClientView from '@/components/catalog/CatalogClientView';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import ItemListSchema from '@/components/seo/ItemListSchema';
@@ -24,22 +25,33 @@ function sp(searchParams: Record<string, string | string[] | undefined>, key: st
   return Array.isArray(val) ? (val[0] ?? '') : (val ?? '');
 }
 
+// Phonebase API ограничивает per_page значением 60.
+// Грузим до 3 страниц = 180 товаров — достаточно для всего активного каталога.
+const PER_PAGE = 60;
+const MAX_PAGES = 3;
+
+async function fetchAllNew(
+  sort: 'price_asc' | 'price_desc' | 'newest',
+): Promise<CatalogItemOut[]> {
+  const items: CatalogItemOut[] = [];
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    try {
+      const res = await fetchCatalog({ condition: 'new', page, per_page: PER_PAGE, sort });
+      items.push(...res.items);
+      if (res.items.length < PER_PAGE) break;
+    } catch (err) {
+      console.error('[/new] fetchCatalog page=' + page + ' failed:', err);
+      break;
+    }
+  }
+  return items;
+}
+
 export default async function NewProductsPage({ searchParams }: Props) {
   const sq = await searchParams;
-  const page = Math.max(1, Number(sp(sq, 'page')) || 1);
   const sort = (sp(sq, 'sort') as 'price_asc' | 'price_desc' | 'newest') || 'newest';
 
-  // Запрашиваем Apple и Samsung параллельно — нет endpoint для всех брендов.
-  // Берём по 100 чтобы клиентские фильтры не показывали половину каталога.
-  const [apple, samsung] = await Promise.allSettled([
-    fetchCatalog({ condition: 'new', brand: 'Apple', page: 1, per_page: 100, sort }),
-    fetchCatalog({ condition: 'new', brand: 'Samsung', page: 1, per_page: 100, sort }),
-  ]);
-
-  const items = [
-    ...(apple.status === 'fulfilled' ? apple.value.items : []),
-    ...(samsung.status === 'fulfilled' ? samsung.value.items : []),
-  ];
+  const items = await fetchAllNew(sort);
 
   return (
     <div className="section-container py-6 md:py-8">
