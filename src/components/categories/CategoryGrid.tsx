@@ -159,13 +159,14 @@ export default function CategoryGrid() {
                       </h3>
                     </div>
 
-                    {/* Image — без card background, парение */}
-                    <div className="relative flex-1 mt-1.5">
+                    {/* Image — без card background; не масштабируем image,
+                        только card целиком парит вверх (через .group hover на Link) */}
+                    <div className="relative flex-1 mt-1.5 overflow-hidden">
                       <Image
                         src={cat.icon}
                         alt={cat.label}
                         fill
-                        className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.12]"
+                        className="object-contain"
                         sizes="140px"
                       />
                     </div>
