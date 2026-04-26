@@ -48,7 +48,7 @@ export default function HeroSlider() {
         {/* Top headline — Apple Store-style */}
         <div className="mb-4 md:mb-5">
           <h1
-            className="font-semibold tracking-tight"
+            className="font-semibold tracking-tight whitespace-nowrap overflow-hidden text-ellipsis"
             style={{
               fontSize: 'clamp(1.25rem, 2.4vw, 1.75rem)',
               letterSpacing: '-0.025em',
@@ -57,7 +57,13 @@ export default function HeroSlider() {
             }}
           >
             Лучшее уже здесь.{' '}
-            <span style={{ color: '#86868b' }}>
+            <span
+              style={{
+                color: '#86868b',
+                fontSize: 'clamp(0.8125rem, 1.2vw, 1rem)',
+                fontWeight: 500,
+              }}
+            >
               Откройте для себя последнюю серию iPhone, Mac, AirPods и многое другое.
             </span>
           </h1>
