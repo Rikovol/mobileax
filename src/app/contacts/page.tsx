@@ -176,21 +176,20 @@ export default function ContactsPage() {
         </h2>
         <div
           className="rounded-3xl overflow-hidden border"
-          style={{ borderColor: 'var(--color-border)', minHeight: 480 }}
+          style={{ borderColor: 'var(--color-border)' }}
         >
           <iframe
             src="https://yandex.ru/sprav/widget/rating-badge/1149010257?type=award"
             width="100%"
-            height="120"
+            height="100"
             title="Рейтинг МобилАкс на Яндекс.Картах"
             style={{ border: 0, display: 'block' }}
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"
           />
-          <div className="p-6 md:p-8">
-            <p className="text-[14px] mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-              Все отзывы клиентов читайте на Яндекс.Картах. Поделитесь своим — это помогает другим
-              орловцам выбрать правильный магазин.
+          <div className="px-5 py-4 md:px-6 md:py-5">
+            <p className="text-[13px] mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+              Все отзывы — на Яндекс.Картах. Поделитесь своим, это помогает другим орловцам.
             </p>
             <div className="flex flex-wrap gap-3">
               <a
