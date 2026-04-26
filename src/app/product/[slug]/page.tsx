@@ -214,23 +214,19 @@ export default async function ProductPage({ params }: Props) {
               </div>
             )}
 
-            {/* Per-store availability for new products with multiple stores */}
+            {/* Total stock — суммарное наличие по всем магазинам */}
             {product.condition === 'new' &&
               product.per_store_availability &&
-              Object.keys(product.per_store_availability).length > 1 && (
-                <div className="rounded-xl bg-[var(--color-bg-secondary)] p-4 text-sm">
-                  <p className="font-semibold mb-2">Наличие по магазинам</p>
-                  <ul className="space-y-1">
-                    {Object.entries(product.per_store_availability).map(([store, qty]) => (
-                      <li
-                        key={store}
-                        className="flex justify-between text-[var(--color-text-secondary)]"
-                      >
-                        <span>{store}</span>
-                        <span className="font-medium text-[var(--color-text)]">{qty} шт.</span>
-                      </li>
-                    ))}
-                  </ul>
+              Object.keys(product.per_store_availability).length > 0 && (
+                <div className="rounded-xl bg-[var(--color-bg-secondary)] p-4 text-sm flex items-center justify-between">
+                  <span className="font-semibold">Наличие</span>
+                  <span className="font-medium text-[var(--color-text)]">
+                    {Object.values(product.per_store_availability).reduce(
+                      (sum, qty) => sum + (Number(qty) || 0),
+                      0,
+                    )}{' '}
+                    шт.
+                  </span>
                 </div>
               )}
 
