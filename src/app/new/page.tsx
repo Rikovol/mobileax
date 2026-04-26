@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchCatalog } from '@/lib/phonebase-client';
-import ProductCard from '@/components/catalog/ProductCard';
+import CatalogClientView from '@/components/catalog/CatalogClientView';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,17 +27,17 @@ export default async function NewProductsPage({ searchParams }: Props) {
   const page = Math.max(1, Number(sp(sq, 'page')) || 1);
   const sort = (sp(sq, 'sort') as 'price_asc' | 'price_desc' | 'newest') || 'newest';
 
-  // Запрашиваем Apple и Samsung параллельно — нет endpoint для всех брендов
+  // Запрашиваем Apple и Samsung параллельно — нет endpoint для всех брендов.
+  // Берём по 100 чтобы клиентские фильтры не показывали половину каталога.
   const [apple, samsung] = await Promise.allSettled([
-    fetchCatalog({ condition: 'new', brand: 'Apple', page: 1, per_page: 24, sort }),
-    fetchCatalog({ condition: 'new', brand: 'Samsung', page: 1, per_page: 24, sort }),
+    fetchCatalog({ condition: 'new', brand: 'Apple', page: 1, per_page: 100, sort }),
+    fetchCatalog({ condition: 'new', brand: 'Samsung', page: 1, per_page: 100, sort }),
   ]);
 
   const items = [
     ...(apple.status === 'fulfilled' ? apple.value.items : []),
     ...(samsung.status === 'fulfilled' ? samsung.value.items : []),
   ];
-  const total = items.length;
 
   return (
     <div className="section-container py-6 md:py-8">
@@ -71,23 +71,9 @@ export default async function NewProductsPage({ searchParams }: Props) {
             · Apple · Samsung · Официальная гарантия
           </span>
         </h1>
-
-        {total > 0 && (
-          <p className="text-[12px] text-[var(--color-text-secondary)]">
-            {total} товаров
-          </p>
-        )}
       </div>
 
-      {total === 0 ? (
-        <p className="text-[var(--color-text-secondary)]">Пока товары не загружены.</p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {items.map((item) => (
-            <ProductCard key={item.slug} item={item} />
-          ))}
-        </div>
-      )}
+      <CatalogClientView initialItems={items} />
     </div>
   );
 }
