@@ -78,12 +78,16 @@ const COLOR_WORDS = buildColorWords();
  * Logic ported 1:1 from tradein-widget.js modelSeries().
  */
 /**
- * Бренды/слова с фиксированным правописанием в выдаче — phonebase возвращает
- * их в разных регистрах ("Redmi Note 15" / "REDMI Note 15"), что приводит
- * к дублированию серий. Нормализуем здесь.
+ * Нормализация имени модели для группировки серий в trade-in wizard.
+ * Phonebase отдаёт одну и ту же серию в разных формах:
+ *   - "Redmi Note 15" vs "REDMI Note 15"   (регистр бренда)
+ *   - "Mi 11 lite" vs "Mi 11 Lite"          (регистр модификатора)
+ *   - "Redmi 10" vs "Redmi 10 (2022)"        (год-disambiguator от 1С-выгрузки)
+ * Всё это — одна серия для пользователя trade-in. Нормализуем.
  */
 function normalizeBrandCasing(model: string): string {
   return model
+    // Бренды (с фиксированным правописанием)
     .replace(/\bREDMI\b/g, 'Redmi')
     .replace(/\bIPHONE\b/gi, 'iPhone')
     .replace(/\bIPAD\b/gi, 'iPad')
@@ -92,7 +96,20 @@ function normalizeBrandCasing(model: string): string {
     .replace(/\bSAMSUNG\b/g, 'Samsung')
     .replace(/\bGALAXY\b/g, 'Galaxy')
     .replace(/\bXIAOMI\b/g, 'Xiaomi')
-    .replace(/\bPOCO\b/g, 'POCO');
+    .replace(/\bPOCO\b/g, 'POCO')
+    // Год в скобках — model-year disambiguator из 1С, для trade-in не нужен
+    .replace(/\s*\((20\d{2})\)/g, '')
+    // Модификаторы линейки — нормализуем регистр чтобы 'lite' и 'Lite' слились
+    .replace(/\blite\b/gi, 'Lite')
+    .replace(/\bpro\b/gi, 'Pro')
+    .replace(/\bmax\b/gi, 'Max')
+    .replace(/\bplus\b/gi, 'Plus')
+    .replace(/\bultra\b/gi, 'Ultra')
+    .replace(/\bmini\b/gi, 'Mini')
+    .replace(/\bfe\b/gi, 'FE')
+    .replace(/\bedge\b/gi, 'Edge')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export function seriesKey(model: string): string {
