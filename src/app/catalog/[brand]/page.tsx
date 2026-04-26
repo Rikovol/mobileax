@@ -5,6 +5,8 @@ import { fetchCatalog } from '@/lib/phonebase-client';
 import ProductCard from '@/components/catalog/ProductCard';
 import CatalogFilters from '@/components/catalog/CatalogFilters';
 import CatalogSubNav from '@/components/catalog/CatalogSubNav';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import ItemListSchema from '@/components/seo/ItemListSchema';
 import { getCategory, getLine, getCategoriesByBrand, categoryUrl } from '@/lib/taxonomy';
 
 export const dynamic = 'force-dynamic';
@@ -92,6 +94,28 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
 
   return (
     <div className="section-container py-6 md:py-8">
+      <Breadcrumbs
+        items={[
+          { label: brandName, href: `/catalog/${brand}` },
+          ...(taxonomyCategory
+            ? [{ label: taxonomyCategory.label, href: `/catalog/${brand}?category=${categorySlug}` }]
+            : []),
+          ...(taxonomyLine
+            ? [
+                {
+                  label: taxonomyLine.label,
+                  href: `/catalog/${brand}?category=${categorySlug}&line=${lineSlug}`,
+                },
+              ]
+            : []),
+        ]}
+      />
+      {catalog?.items && (
+        <ItemListSchema
+          items={catalog.items}
+          name={`${brandName}${taxonomyCategory ? ` — ${taxonomyCategory.label}` : ''}`}
+        />
+      )}
       {/* Compact toolbar — breadcrumb + h1 inline + chips + condition + filters */}
       <div className="mb-6 catalog-toolbar">
         {/* Breadcrumb (тонкий) */}

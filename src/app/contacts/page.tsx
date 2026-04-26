@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LEGAL } from '@/lib/legal';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import LocalBusinessSchema from '@/components/seo/LocalBusinessSchema';
 
 export const metadata: Metadata = {
   title: 'Контакты — МобилАкс в Орле',
@@ -13,6 +15,8 @@ export const metadata: Metadata = {
 export default function ContactsPage() {
   return (
     <div className="section-container section-gap">
+      <LocalBusinessSchema />
+      <Breadcrumbs items={[{ label: 'Контакты', href: '/contacts' }]} />
       <nav className="text-sm text-[var(--color-text-secondary)] mb-8 flex items-center gap-2">
         <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">
           Главная

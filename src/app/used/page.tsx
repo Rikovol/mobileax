@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchCatalog } from '@/lib/phonebase-client';
 import CatalogClientView from '@/components/catalog/CatalogClientView';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import ItemListSchema from '@/components/seo/ItemListSchema';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,6 +45,8 @@ export default async function UsedPage({ searchParams }: Props) {
 
   return (
     <div className="section-container py-6 md:py-8">
+      <Breadcrumbs items={[{ label: 'Б/У техника', href: '/used' }]} />
+      <ItemListSchema items={items} name="Б/У техника" />
       <div className="mb-6 catalog-toolbar">
         <nav className="text-[12px] text-[var(--color-text-secondary)] mb-1.5 flex items-center gap-1.5">
           <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">

@@ -5,6 +5,7 @@ import { formatPrice, formatSimType, extractRealSlug, productHref } from '@/lib/
 import ProductGallery from '@/components/product/ProductGallery';
 import BuyButton from '@/components/product/BuyButton';
 import ProductVariants from '@/components/product/ProductVariants';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
 
 export const dynamic = 'force-dynamic';
 
@@ -146,6 +147,14 @@ export default async function ProductPage({ params }: Props) {
         type="application/ld+json"
         // Safe: JSON.stringify escapes all special characters; no user HTML involved.
         dangerouslySetInnerHTML={{ __html: buildJsonLd(product, apiSlug) }}
+      />
+      <Breadcrumbs
+        items={[
+          ...(product.brand
+            ? [{ label: product.brand, href: `/catalog/${encodeURIComponent(product.brand)}` }]
+            : []),
+          { label: name, href: '#' },
+        ]}
       />
 
       <div className="section-container section-gap">
