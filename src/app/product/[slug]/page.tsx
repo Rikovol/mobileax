@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { fetchProduct } from '@/lib/phonebase-client';
+import { fetchProduct, fetchCatalog } from '@/lib/phonebase-client';
 import { formatPrice, formatSimType } from '@/lib/utils';
 import ProductGallery from '@/components/product/ProductGallery';
 import BuyButton from '@/components/product/BuyButton';
+import ProductVariants from '@/components/product/ProductVariants';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,6 +83,25 @@ export default async function ProductPage({ params }: Props) {
     // API not yet connected
   }
 
+  // Параллельно тянем варианты этой модели (другие память/цвет)
+  let variants: Awaited<ReturnType<typeof fetchCatalog>>['items'] = [];
+  if (product?.brand && product?.model) {
+    try {
+      const catalog = await fetchCatalog({
+        condition: product.condition,
+        brand: product.brand,
+        search: product.model,
+        per_page: 50,
+      });
+      // Фильтруем на тот же brand+model — search может зацепить лишние
+      variants = catalog.items.filter(
+        (v) => v.brand === product!.brand && v.model === product!.model,
+      );
+    } catch {
+      /* ignore — variants просто не покажутся */
+    }
+  }
+
   if (!product) {
     return (
       <div className="section-container section-gap">
@@ -154,7 +174,16 @@ export default async function ProductPage({ params }: Props) {
               )}
             </h1>
 
-            {/* Color */}
+            {/* Variants — память / цвет / SIM с переходом на другие slug'и той же модели */}
+            <ProductVariants
+              variants={variants}
+              currentSlug={slug}
+              currentStorage={product.storage}
+              currentColor={product.color}
+              currentSimType={product.sim_type}
+            />
+
+            {/* Color (текстовая подпись) */}
             {product.color && (
               <p className="text-[var(--color-text-secondary)] -mt-2">{product.color}</p>
             )}
