@@ -1,11 +1,11 @@
 import { fetchBrands } from '@/lib/phonebase-client';
 import HeroSlider from '@/components/hero/HeroSlider';
 import ShopLatestScroller from '@/components/scroller/ShopLatestScroller';
-import TrustBar from '@/components/trust/TrustBar';
 import CategoryGrid from '@/components/categories/CategoryGrid';
 import HighlightCards from '@/components/highlights/HighlightCards';
 import FeaturedProducts from '@/components/catalog/FeaturedProducts';
 import HelpSection from '@/components/help/HelpSection';
+import DiscoverScroller from '@/components/scroller/DiscoverScroller';
 import Schema from '@/components/seo/Schema';
 
 // Revalidate every 5 minutes
@@ -22,24 +22,25 @@ async function warmBrands(): Promise<void> {
 export default async function HomePage() {
   await warmBrands();
 
+  // Apple Store-style порядок секций:
+  // 1. Hero "The latest is here" + 2 inline product cards
+  // 2. Categories scroller (Browse by category)
+  // 3. Latest scroller (The latest)
+  // 4. Featured products (наши реальные товары из phonebase)
+  // 5. Promo banners 2-col (Trade-In + Рассрочка)
+  // 6. Help section 4-col
+  // 7. Discover scroller (services + premium products)
+
   return (
     <>
-      {/* JSON-LD Schema.org */}
       <Schema />
 
-      {/* 1. Hero slider — full-bleed, Apple-level */}
       <HeroSlider />
 
-      {/* 2. Shop latest — horizontal product scroller (Apple data-core-scroller-platter style) */}
-      <ShopLatestScroller />
-
-      {/* 3. Trust bar — 4 преимущества */}
-      <TrustBar />
-
-      {/* 4. Category grid — Apple «Shop by category» */}
       <CategoryGrid />
 
-      {/* 5. Популярное — новые товары из phonebase */}
+      <ShopLatestScroller />
+
       <FeaturedProducts
         title="Популярное"
         subtitle="Только что поступили в продажу"
@@ -49,21 +50,11 @@ export default async function HomePage() {
         limit={8}
       />
 
-      {/* 6. Highlights — Trade-In / Рассрочка / Б/У */}
       <HighlightCards />
 
-      {/* 7. Б/У техника */}
-      <FeaturedProducts
-        title="Техника Б/У"
-        subtitle="Проверенные устройства с гарантией магазина"
-        viewAllHref="/used"
-        viewAllLabel="Все б/у"
-        condition="used"
-        limit={4}
-      />
-
-      {/* 8. Help section — «Нужна помощь с покупкой?» */}
       <HelpSection />
+
+      <DiscoverScroller />
     </>
   );
 }
