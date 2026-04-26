@@ -87,16 +87,17 @@ const COLOR_WORDS = buildColorWords();
  */
 function normalizeBrandCasing(model: string): string {
   return model
-    // Бренды (с фиксированным правописанием)
-    .replace(/\bREDMI\b/g, 'Redmi')
-    .replace(/\bIPHONE\b/gi, 'iPhone')
-    .replace(/\bIPAD\b/gi, 'iPad')
-    .replace(/\bMACBOOK\b/gi, 'MacBook')
-    .replace(/\bAIRPODS\b/gi, 'AirPods')
-    .replace(/\bSAMSUNG\b/g, 'Samsung')
-    .replace(/\bGALAXY\b/g, 'Galaxy')
-    .replace(/\bXIAOMI\b/g, 'Xiaomi')
-    .replace(/\bPOCO\b/g, 'POCO')
+    // Бренды (с фиксированным правописанием) — все case-insensitive,
+    // чтобы Redmi/REDMI/redmi нормализовались в одно
+    .replace(/\bredmi\b/gi, 'Redmi')
+    .replace(/\biphone\b/gi, 'iPhone')
+    .replace(/\bipad\b/gi, 'iPad')
+    .replace(/\bmacbook\b/gi, 'MacBook')
+    .replace(/\bairpods\b/gi, 'AirPods')
+    .replace(/\bsamsung\b/gi, 'Samsung')
+    .replace(/\bgalaxy\b/gi, 'Galaxy')
+    .replace(/\bxiaomi\b/gi, 'Xiaomi')
+    .replace(/\bpoco\b/gi, 'POCO')
     // Год в скобках — model-year disambiguator из 1С, для trade-in не нужен
     .replace(/\s*\((20\d{2})\)/g, '')
     // Модификаторы линейки — нормализуем регистр чтобы 'lite' и 'Lite' слились

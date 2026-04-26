@@ -61,10 +61,18 @@ function slugify(input: string): string {
 }
 
 /**
+ * Разделитель между человекочитаемым префиксом и base64-id товара.
+ * НЕ ИСПОЛЬЗОВАТЬ '--': base64url alphabet содержит `-`, и подряд два дефиса
+ * могут встретиться внутри настоящего slug (~3% случаев на slug длиной 30).
+ * `~~` не входит в base64 — однозначно парсится.
+ */
+const SLUG_DELIMITER = '~~';
+
+/**
  * Строит человекочитаемую ссылку на товар:
- * `/product/{slugified-brand-model-storage-color}--{base64-slug}`
- * Backend разбирает по `--` и берёт последнюю часть как идентификатор.
- * Если префикс пустой/слишком короткий — возвращаем чистый slug (back-compat).
+ * `/product/{slugified-brand-model-storage-color}~~{base64-slug}`
+ * Backend разбирает по `~~` и берёт последнюю часть как идентификатор.
+ * Если префикс пустой — возвращаем чистый slug (back-compat).
  */
 export function productHref(parts: {
   brand?: string | null;
@@ -76,17 +84,26 @@ export function productHref(parts: {
   const human = slugify(
     [parts.brand, parts.model, parts.storage, parts.color].filter(Boolean).join(' '),
   );
-  return human ? `/product/${human}--${parts.slug}` : `/product/${parts.slug}`;
+  return human ? `/product/${human}${SLUG_DELIMITER}${parts.slug}` : `/product/${parts.slug}`;
 }
 
 /**
- * Достаёт «настоящий» slug (base64) из URL-параметра, удаляя человекочитаемый
- * префикс. Совместим со старыми URL без префикса.
+ * Достаёт «настоящий» slug (base64) из URL-параметра.
+ * Поддерживает три формата:
+ * 1. Новый: `human~~base64` → берём часть после `~~`
+ * 2. Старый legacy: `human--base64` → берём часть после `--` (для обратной совместимости)
+ * 3. Без префикса: `base64` → возвращаем как есть
+ *
+ * NB: legacy формат `--` имеет ~3% вероятность ложного срабатывания на slug'ах,
+ * содержащих два подряд дефиса. Старые URL продолжают работать в большинстве
+ * случаев; если кто-то наткнётся на сломанный — открыть товар через каталог.
  */
 export function extractRealSlug(slug: string): string {
-  const idx = slug.lastIndexOf('--');
-  if (idx === -1) return slug;
-  return slug.slice(idx + 2);
+  const newIdx = slug.lastIndexOf(SLUG_DELIMITER);
+  if (newIdx !== -1) return slug.slice(newIdx + SLUG_DELIMITER.length);
+  const legacyIdx = slug.lastIndexOf('--');
+  if (legacyIdx !== -1) return slug.slice(legacyIdx + 2);
+  return slug;
 }
 
 /** Resolve media path (`/media/...`) to absolute URL via NEXT_PUBLIC_PHONEBASE_API.
