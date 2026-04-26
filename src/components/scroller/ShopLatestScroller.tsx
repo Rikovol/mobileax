@@ -3,9 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { HomeCardData } from '@/lib/home-content';
+import { homeImageUrl } from '@/lib/home-content';
+import { getBgStyle, getCtaBg } from '@/lib/home-presets';
 
 interface ScrollerCard {
-  id: number;
+  id: number | string;
   eyebrow: string;
   title: string;
   subtitle: string;
@@ -15,9 +18,10 @@ interface ScrollerCard {
   imgAlt: string;
   bg: string;
   textDark?: boolean;
+  ctaBg?: string;
 }
 
-const CARDS: ScrollerCard[] = [
+const FALLBACK: ScrollerCard[] = [
   {
     id: 0,
     eyebrow: 'Выгода',
@@ -76,6 +80,26 @@ const CARDS: ScrollerCard[] = [
   },
 ];
 
+function cardsFromCms(cms: HomeCardData[] | undefined): ScrollerCard[] {
+  if (!cms || cms.length === 0) return FALLBACK;
+  return cms.map((c, idx) => {
+    const style = getBgStyle(c.bg_preset);
+    return {
+      id: idx,
+      eyebrow: c.eyebrow ?? '',
+      title: c.title ?? '',
+      subtitle: c.subtitle ?? '',
+      cta: c.cta_label ?? '',
+      ctaHref: c.cta_href ?? '#',
+      imgSrc: homeImageUrl(c.image_url) ?? '/themes/mobileax/heroes/iphone-17-pro.png',
+      imgAlt: c.title ?? '',
+      bg: style.bg,
+      textDark: c.text_dark || !!style.isLight,
+      ctaBg: getCtaBg(c.cta_color),
+    };
+  });
+}
+
 function ArrowButton({
   direction,
   disabled,
@@ -108,7 +132,12 @@ function ArrowButton({
   );
 }
 
-export default function ShopLatestScroller() {
+interface Props {
+  cards?: HomeCardData[];
+}
+
+export default function ShopLatestScroller({ cards }: Props = {}) {
+  const CARDS = cardsFromCms(cards);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -250,12 +279,14 @@ export default function ShopLatestScroller() {
                       >
                         {card.subtitle}
                       </p>
-                      <span
-                        className="inline-flex items-center justify-center mt-5 px-5 py-2 rounded-full font-medium text-[13px] text-white transition-opacity hover:opacity-90"
-                        style={{ background: '#0071e3' }}
-                      >
-                        {card.cta}
-                      </span>
+                      {card.cta && (
+                        <span
+                          className="inline-flex items-center justify-center mt-5 px-5 py-2 rounded-full font-medium text-[13px] text-white transition-opacity hover:opacity-90"
+                          style={{ background: card.ctaBg ?? '#0071e3' }}
+                        >
+                          {card.cta}
+                        </span>
+                      )}
                     </div>
 
                     {/* Product image — fills bottom */}

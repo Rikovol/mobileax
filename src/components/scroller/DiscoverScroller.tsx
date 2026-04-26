@@ -3,10 +3,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { HomeCardData } from '@/lib/home-content';
+import { homeImageUrl } from '@/lib/home-content';
+import { getBgStyle, getCtaBg } from '@/lib/home-presets';
 
 /**
  * Apple Store "Discover values" — горизонтальный rf-cards-scroller
  * с marketing-style cards: фишки и сервисы магазина.
+ *
+ * Карточки приходят из phonebase CMS (props.cards). Пусто → fallback.
  */
 
 interface DiscoverCard {
@@ -19,9 +24,10 @@ interface DiscoverCard {
   imgAlt: string;
   bg: string;
   textDark: boolean;
+  ctaBg?: string;
 }
 
-const CARDS: DiscoverCard[] = [
+const FALLBACK: DiscoverCard[] = [
   {
     id: 'vision-pro',
     eyebrow: 'Apple Vision Pro',
@@ -90,6 +96,25 @@ const CARDS: DiscoverCard[] = [
   },
 ];
 
+function cardsFromCms(cms: HomeCardData[] | undefined): DiscoverCard[] {
+  if (!cms || cms.length === 0) return FALLBACK;
+  return cms.map((c, idx) => {
+    const style = getBgStyle(c.bg_preset);
+    return {
+      id: `cms-${idx}`,
+      eyebrow: c.eyebrow ?? '',
+      title: c.title ?? '',
+      cta: c.cta_label ?? '',
+      href: c.cta_href ?? '#',
+      imgSrc: homeImageUrl(c.image_url) ?? '/themes/mobileax/heroes/iphone-17-pro.png',
+      imgAlt: c.title ?? '',
+      bg: style.bg,
+      textDark: c.text_dark || !!style.isLight,
+      ctaBg: getCtaBg(c.cta_color),
+    };
+  });
+}
+
 function ArrowButton({
   direction,
   disabled,
@@ -119,7 +144,12 @@ function ArrowButton({
   );
 }
 
-export default function DiscoverScroller() {
+interface Props {
+  cards?: HomeCardData[];
+}
+
+export default function DiscoverScroller({ cards }: Props = {}) {
+  const CARDS = cardsFromCms(cards);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -231,12 +261,14 @@ export default function DiscoverScroller() {
                       >
                         {card.title}
                       </h3>
-                      <span
-                        className="inline-flex items-center justify-center px-5 py-2 rounded-full font-medium text-[13px] text-white transition-opacity hover:opacity-90"
-                        style={{ background: '#0071e3' }}
-                      >
-                        {card.cta}
-                      </span>
+                      {card.cta && (
+                        <span
+                          className="inline-flex items-center justify-center px-5 py-2 rounded-full font-medium text-[13px] text-white transition-opacity hover:opacity-90"
+                          style={{ background: card.ctaBg ?? '#0071e3' }}
+                        >
+                          {card.cta}
+                        </span>
+                      )}
                     </div>
 
                     <div className="relative flex-1 mt-2">

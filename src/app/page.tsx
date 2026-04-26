@@ -1,4 +1,5 @@
 import { fetchBrands } from '@/lib/phonebase-client';
+import { fetchHomeBlocks, getSection } from '@/lib/home-content';
 import HeroSlider from '@/components/hero/HeroSlider';
 import ShopLatestScroller from '@/components/scroller/ShopLatestScroller';
 import HighlightCards from '@/components/highlights/HighlightCards';
@@ -20,6 +21,13 @@ async function warmBrands(): Promise<void> {
 
 export default async function HomePage() {
   await warmBrands();
+  // CMS-блоки главной из phonebase. При ошибке — пустой объект, компоненты
+  // упадут на свои hardcoded fallback. ISR 5 минут (см. fetchHomeBlocks).
+  const homeBlocks = await fetchHomeBlocks();
+  const heroSection = getSection(homeBlocks, 'hero_dual');
+  const highlightSection = getSection(homeBlocks, 'highlight_dual');
+  const shopLatestSection = getSection(homeBlocks, 'shop_latest');
+  const discoverSection = getSection(homeBlocks, 'discover_scroll');
 
   // Apple Store-style порядок секций:
   // 1. Hero "The latest is here" + 2 inline product cards
@@ -34,9 +42,9 @@ export default async function HomePage() {
     <>
       <Schema />
 
-      <HeroSlider />
+      <HeroSlider cards={heroSection?.cards} />
 
-      <ShopLatestScroller />
+      <ShopLatestScroller cards={shopLatestSection?.cards} />
 
       <FeaturedProducts
         title="Популярное"
@@ -47,11 +55,11 @@ export default async function HomePage() {
         limit={8}
       />
 
-      <HighlightCards />
+      <HighlightCards cards={highlightSection?.cards} />
 
       <HelpSection />
 
-      <DiscoverScroller />
+      <DiscoverScroller cards={discoverSection?.cards} />
     </>
   );
 }

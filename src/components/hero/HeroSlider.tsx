@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import type { HomeCardData } from '@/lib/home-content';
+import { homeImageUrl } from '@/lib/home-content';
+import { getCtaBg } from '@/lib/home-presets';
 
 /**
  * Hero — две inline карточки с PNG (без фона), цветными градиентами,
  * геометрическими акцентами и яркими CTA в Apple Store-style.
+ *
+ * Карточки приходят из phonebase CMS (props.cards). Если CMS пустой —
+ * рендерится hardcoded fallback: iPhone 17 Pro + Trade-In.
  */
 
 interface HeroProductCard {
@@ -15,9 +21,12 @@ interface HeroProductCard {
   imgAlt: string;
   /** Стилистика: 'pro' = тёмный titanium / 'e' = светлый peach */
   variant: 'pro' | 'e';
+  /** Кастомный bg/cta поверх variant — для гибкости из CMS. */
+  bgOverride?: string;
+  ctaBgOverride?: string;
 }
 
-const PRODUCTS: HeroProductCard[] = [
+const FALLBACK: HeroProductCard[] = [
   {
     eyebrow: 'iPhone 17 Pro',
     title: 'Идеальный iPhone.',
@@ -37,6 +46,26 @@ const PRODUCTS: HeroProductCard[] = [
     variant: 'e',
   },
 ];
+
+function cardsFromCms(cms: HomeCardData[] | undefined): HeroProductCard[] {
+  if (!cms || cms.length === 0) return FALLBACK;
+  return cms.map((c) => ({
+    eyebrow: c.eyebrow ?? '',
+    title: c.title ?? '',
+    cta: c.cta_label ?? '',
+    ctaHref: c.cta_href ?? '#',
+    imgSrc: homeImageUrl(c.image_url) ?? '/themes/mobileax/heroes/iphone-17-pro.png',
+    imgAlt: c.title ?? c.eyebrow ?? '',
+    // text_dark=true → светлый фон → variant 'e' (с оранжевым акцентом)
+    variant: c.text_dark ? 'e' : 'pro',
+    bgOverride: c.bg_preset === 'trade-in-orange'
+      ? 'linear-gradient(135deg, #fff5e6 0%, #ffe4cc 50%, #ffd5b8 100%)'
+      : c.bg_preset === 'apple-pro-dark' || c.bg_preset === 'apple-blue'
+        ? 'linear-gradient(135deg, #0a0f1f 0%, #14192e 50%, #0d1226 100%)'
+        : undefined,
+    ctaBgOverride: getCtaBg(c.cta_color),
+  }));
+}
 
 function ProDecorations() {
   return (
@@ -145,7 +174,13 @@ function EDecorations() {
   );
 }
 
-export default function HeroSlider() {
+interface Props {
+  /** Карточки из CMS phonebase. Пусто → fallback на FALLBACK. */
+  cards?: HomeCardData[];
+}
+
+export default function HeroSlider({ cards }: Props = {}) {
+  const PRODUCTS = cardsFromCms(cards);
   return (
     <section aria-label="Витрина новинок" style={{ background: 'var(--color-bg)' }}>
       <div className="section-container py-3 md:py-5">
@@ -180,21 +215,21 @@ export default function HeroSlider() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           {PRODUCTS.map((p) => {
             const isPro = p.variant === 'pro';
-            const cardBg = isPro
+            const cardBg = p.bgOverride ?? (isPro
               ? 'linear-gradient(135deg, #0a0f1f 0%, #14192e 50%, #0d1226 100%)'
-              : 'linear-gradient(135deg, #fff5e6 0%, #ffe4cc 50%, #ffd5b8 100%)';
+              : 'linear-gradient(135deg, #fff5e6 0%, #ffe4cc 50%, #ffd5b8 100%)');
             const eyebrowColor = isPro ? 'rgba(255,255,255,0.6)' : 'rgba(80,40,20,0.55)';
             const titleColor = isPro ? '#f5f5f7' : '#1d1d1f';
-            const ctaGradient = isPro
+            const ctaGradient = p.ctaBgOverride ?? (isPro
               ? 'linear-gradient(135deg, #0066ff 0%, #00b4ff 100%)'
-              : 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)';
+              : 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)');
             const ctaShadow = isPro
               ? '0 8px 24px rgba(0,120,255,0.45), inset 0 1px 0 rgba(255,255,255,0.25)'
               : '0 8px 24px rgba(255,107,53,0.45), inset 0 1px 0 rgba(255,255,255,0.3)';
 
             return (
               <Link
-                key={p.eyebrow}
+                key={p.eyebrow + p.title}
                 href={p.ctaHref}
                 className="group relative flex flex-col rounded-3xl overflow-hidden transition-transform duration-300 hover:scale-[1.005]"
                 style={{
