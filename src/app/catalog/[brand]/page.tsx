@@ -55,10 +55,8 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
   const taxonomyLine =
     taxonomyCategory && lineSlug ? getLine(taxonomyCategory, lineSlug) : undefined;
 
-  // Приоритет search-запроса: line > storage (если оба заданы — line побеждает)
-  const searchQuery = taxonomyLine?.searchQuery
-    ?? taxonomyCategory?.lines.map((l) => l.searchQuery)[0] // fallback: первая линейка категории если line не выбран
-    ?? storage;
+  // Приоритет search-запроса: line > storage. Без линейки — без search (показать всю категорию)
+  const searchQuery = taxonomyLine?.searchQuery ?? storage;
 
   // brand из URL имеет приоритет; если в taxonomy выбрана категория, она должна совпасть.
   const effectiveBrand = taxonomyCategory?.brand ?? brandName;

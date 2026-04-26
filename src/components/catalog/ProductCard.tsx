@@ -38,10 +38,11 @@ export default function ProductCard({ item }: Props) {
       onMouseLeave={handleMouseLeave}
       whileHover={{ scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="h-full"
     >
       <Link
         href={`/product/${item.slug}`}
-        className="product-card group block rounded-2xl bg-[var(--color-bg-secondary)] overflow-hidden transition-shadow duration-300 hover:shadow-[0_24px_48px_rgba(0,0,0,0.10)]"
+        className="product-card group flex flex-col h-full rounded-2xl bg-[var(--color-bg-secondary)] overflow-hidden transition-shadow duration-300 hover:shadow-[0_24px_48px_rgba(0,0,0,0.10)]"
         title={name}
       >
         {/* Image area */}
@@ -76,11 +77,14 @@ export default function ProductCard({ item }: Props) {
         </div>
 
         {/* Info block */}
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-1">
           <p className="text-[11px] text-[var(--color-text-secondary)] mb-1 uppercase tracking-widest font-medium">
             {item.brand}
           </p>
-          <p className="font-semibold text-[var(--color-text)] leading-snug line-clamp-2 text-[15px]">
+          <p
+            className="font-semibold text-[var(--color-text)] leading-snug line-clamp-2 text-[15px]"
+            style={{ minHeight: '2.6em' }}
+          >
             {item.model}
             {item.storage && ` ${item.storage}`}
             {item.color && (
@@ -95,10 +99,14 @@ export default function ProductCard({ item }: Props) {
             </p>
           )}
 
-          <div className="mt-3 flex flex-col">
-            {item.price_retail && item.price_retail > item.price_effective && (
+          <div className="mt-auto pt-3 flex flex-col" style={{ minHeight: '3.25rem' }}>
+            {item.price_retail && item.price_retail > item.price_effective ? (
               <p className="line-through text-xs text-[var(--color-text-secondary)]">
                 {formatPrice(item.price_retail)}
+              </p>
+            ) : (
+              <p className="text-xs invisible select-none" aria-hidden>
+                &nbsp;
               </p>
             )}
             <p className="text-[17px] font-semibold text-[var(--color-text)]">
