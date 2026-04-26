@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import { fetchCatalog } from '@/lib/phonebase-client';
 import ProductCard from '@/components/catalog/ProductCard';
@@ -65,29 +66,52 @@ export default async function UsedPage({ searchParams }: Props) {
       : [];
 
   return (
-    <div className="section-container section-gap">
-      {/* Heading */}
-      <h1 className="hero-title mb-3">Б/У техника с гарантией</h1>
-      <p className="hero-subtitle mb-10">
-        Каждый телефон проверен. Батарея, корпус, функционал — всё в порядке.
-      </p>
+    <div className="section-container py-6 md:py-8">
+      <div className="mb-6 catalog-toolbar">
+        <nav className="text-[12px] text-[var(--color-text-secondary)] mb-1.5 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">
+            Главная
+          </Link>
+          <span className="opacity-50">/</span>
+          <span className="text-[var(--color-text)]">Б/У техника</span>
+        </nav>
 
-      {/* Trust pills */}
-      <div className="flex flex-wrap gap-2 mb-10">
-        {['Проверка батареи', 'Диагностика перед продажей', 'Гарантия 30 дней', 'Обмен в течение 14 дней'].map(
-          (tag) => (
+        <h1
+          className="font-semibold tracking-tight mb-3"
+          style={{
+            fontSize: 'clamp(1.375rem, 2.6vw, 1.875rem)',
+            letterSpacing: '-0.025em',
+            color: 'var(--color-text)',
+            lineHeight: 1.2,
+          }}
+        >
+          Б/У техника
+          <span
+            className="ml-2 hidden sm:inline"
+            style={{
+              fontSize: 'clamp(0.75rem, 1.1vw, 0.9375rem)',
+              fontWeight: 500,
+              color: '#86868b',
+            }}
+          >
+            · Гарантия 30 дней · Обмен 14 дней · Диагностика
+          </span>
+        </h1>
+
+        {/* Trust pills — компактнее */}
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {['Проверка батареи', 'Диагностика', 'Гарантия 30 дней', 'Обмен 14 дней'].map((tag) => (
             <span
               key={tag}
-              className="text-sm px-3 py-1.5 rounded-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-[var(--color-text-secondary)]"
+              className="text-[12px] px-3 py-1 rounded-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-[var(--color-text-secondary)]"
             >
               ✓ {tag}
             </span>
-          ),
-        )}
+          ))}
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="mb-6">
+      <div className="mb-5">
         <Suspense>
           <CatalogFilters
             completenessOptions={completenessOptions}

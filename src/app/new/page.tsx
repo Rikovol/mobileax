@@ -40,29 +40,53 @@ export default async function NewProductsPage({ searchParams }: Props) {
   const total = items.length;
 
   return (
-    <div className="section-container section-gap">
-      <nav className="text-sm text-[var(--color-text-secondary)] mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">
-          Главная
-        </Link>
-        <span>/</span>
-        <span className="text-[var(--color-text)]">Новые товары</span>
-      </nav>
+    <div className="section-container py-6 md:py-8">
+      <div className="mb-6 catalog-toolbar">
+        <nav className="text-[12px] text-[var(--color-text-secondary)] mb-1.5 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">
+            Главная
+          </Link>
+          <span className="opacity-50">/</span>
+          <span className="text-[var(--color-text)]">Новые товары</span>
+        </nav>
 
-      <h1 className="hero-title mb-3">Новые товары</h1>
-      <p className="hero-subtitle mb-10">Apple, Samsung — официальная гарантия</p>
+        <h1
+          className="font-semibold tracking-tight mb-3"
+          style={{
+            fontSize: 'clamp(1.375rem, 2.6vw, 1.875rem)',
+            letterSpacing: '-0.025em',
+            color: 'var(--color-text)',
+            lineHeight: 1.2,
+          }}
+        >
+          Новые товары
+          <span
+            className="ml-2 hidden sm:inline"
+            style={{
+              fontSize: 'clamp(0.75rem, 1.1vw, 0.9375rem)',
+              fontWeight: 500,
+              color: '#86868b',
+            }}
+          >
+            · Apple · Samsung · Официальная гарантия
+          </span>
+        </h1>
+
+        {total > 0 && (
+          <p className="text-[12px] text-[var(--color-text-secondary)]">
+            {total} товаров
+          </p>
+        )}
+      </div>
 
       {total === 0 ? (
         <p className="text-[var(--color-text-secondary)]">Пока товары не загружены.</p>
       ) : (
-        <>
-          <p className="text-sm text-[var(--color-text-secondary)] mb-6">{total} товаров</p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {items.map((item) => (
-              <ProductCard key={item.slug} item={item} />
-            ))}
-          </div>
-        </>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {items.map((item) => (
+            <ProductCard key={item.slug} item={item} />
+          ))}
+        </div>
       )}
     </div>
   );

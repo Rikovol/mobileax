@@ -93,84 +93,100 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
     : [];
 
   return (
-    <div className="section-container section-gap">
-      {/* Breadcrumb */}
-      <nav className="text-sm text-[var(--color-text-secondary)] mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">
-          Главная
-        </Link>
-        <span>/</span>
-        <span className="text-[var(--color-text)]">{brandName}</span>
-      </nav>
+    <div className="section-container py-6 md:py-8">
+      {/* Compact toolbar — breadcrumb + h1 inline + chips + condition + filters */}
+      <div className="mb-6 catalog-toolbar">
+        {/* Breadcrumb (тонкий) */}
+        <nav className="text-[12px] text-[var(--color-text-secondary)] mb-1.5 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[var(--color-accent)] transition-colors">
+            Главная
+          </Link>
+          <span className="opacity-50">/</span>
+          <span className="text-[var(--color-text)]">{brandName}</span>
+        </nav>
 
-      {/* Page heading */}
-      <h1 className="hero-title mb-3">
-        {taxonomyLine?.label ?? taxonomyCategory?.label ?? brandName}
-      </h1>
-      <p className="hero-subtitle mb-10">Официальная гарантия · Trade-in · Рассрочка</p>
+        {/* H1 + subtitle на одной строке (Apple Store-style) */}
+        <h1
+          className="font-semibold tracking-tight mb-3"
+          style={{
+            fontSize: 'clamp(1.375rem, 2.6vw, 1.875rem)',
+            letterSpacing: '-0.025em',
+            color: 'var(--color-text)',
+            lineHeight: 1.2,
+          }}
+        >
+          {taxonomyLine?.label ?? taxonomyCategory?.label ?? brandName}
+          <span
+            className="ml-2 hidden sm:inline"
+            style={{
+              fontSize: 'clamp(0.75rem, 1.1vw, 0.9375rem)',
+              fontWeight: 500,
+              color: '#86868b',
+            }}
+          >
+            · Гарантия · Trade-In · Рассрочка
+          </span>
+        </h1>
 
-      {/* Категория chips: отдельные категории для текущего brand. Категории с customHref
-          (например used → /used) ведут на собственную страницу, не на catalog. */}
-      {brandsForBrand.length > 1 && (
-        <nav aria-label="Категории" className="mb-6 flex gap-2 flex-wrap">
-          {brandsForBrand.map((cat) => {
-            const active = cat.slug === categorySlug;
-            const href = cat.customHref ?? categoryUrl(cat);
+        {/* Один ряд: brand-chips + condition (если на узком — wrap) */}
+        <div className="flex flex-wrap items-center gap-1.5 mb-2">
+          {brandsForBrand.length > 1 &&
+            brandsForBrand.map((cat) => {
+              const active = cat.slug === categorySlug;
+              const href = cat.customHref ?? categoryUrl(cat);
+              return (
+                <Link
+                  key={cat.slug}
+                  href={href}
+                  className="px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 hover:scale-[1.04] active:scale-[0.98]"
+                  style={{
+                    background: active ? '#1d1d1f' : 'rgba(0,0,0,0.05)',
+                    color: active ? '#fff' : '#1d1d1f',
+                  }}
+                >
+                  {cat.label}
+                </Link>
+              );
+            })}
+          {brandsForBrand.length > 1 && (
+            <span className="mx-1 h-5 w-px bg-[var(--color-border)] hidden sm:inline-block" aria-hidden />
+          )}
+          {(['new', 'used'] as const).map((cond) => {
+            const params = new URLSearchParams();
+            params.set('condition', cond);
+            if (categorySlug) params.set('category', categorySlug);
+            if (lineSlug) params.set('line', lineSlug);
+            const active = condition === cond;
             return (
               <Link
-                key={cat.slug}
-                href={href}
-                className="px-4 py-2 rounded-full text-[14px] font-medium transition-colors"
+                key={cond}
+                href={`/catalog/${brand}?${params.toString()}`}
+                className="px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 hover:scale-[1.04] active:scale-[0.98]"
                 style={{
-                  background: active ? '#1d1d1f' : 'rgba(0,0,0,0.05)',
+                  background: active ? '#0071e3' : 'rgba(0,0,0,0.05)',
                   color: active ? '#fff' : '#1d1d1f',
                 }}
               >
-                {cat.label}
+                {cond === 'new' ? 'Новые' : 'Б/у'}
               </Link>
             );
           })}
-        </nav>
-      )}
+        </div>
 
-      {/* Линейки внутри выбранной категории (для iPhone — 17/17 Pro/Air/16/15/etc.) */}
-      {taxonomyCategory && (
-        <CatalogSubNav
-          category={taxonomyCategory}
-          brand={effectiveBrand}
-          activeLineSlug={lineSlug}
-        />
-      )}
-
-      {/* Condition switch */}
-      <div className="flex gap-2 mb-8">
-        {(['new', 'used'] as const).map((cond) => {
-          const params = new URLSearchParams();
-          params.set('condition', cond);
-          if (categorySlug) params.set('category', categorySlug);
-          if (lineSlug) params.set('line', lineSlug);
-          return (
-            <Link
-              key={cond}
-              href={`/catalog/${brand}?${params.toString()}`}
-              className={[
-                'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
-                condition === cond
-                  ? 'bg-[var(--color-accent)] text-white'
-                  : 'bg-[var(--color-bg-secondary)] text-[var(--color-text)] hover:bg-[var(--color-border)]',
-              ].join(' ')}
-            >
-              {cond === 'new' ? 'Новые' : 'Б/у'}
-            </Link>
-          );
-        })}
+        {/* Линейки внутри категории — chips только если категория выбрана */}
+        {taxonomyCategory && (
+          <CatalogSubNav
+            category={taxonomyCategory}
+            brand={effectiveBrand}
+            activeLineSlug={lineSlug}
+          />
+        )}
       </div>
 
       <div className="flex gap-10">
-        {/* Main content (sidebar заменён на верхние chips через CatalogSubNav) */}
         <div className="flex-1 min-w-0">
           {/* Filters row */}
-          <div className="mb-6">
+          <div className="mb-5">
             <Suspense>
               <CatalogFilters
                 storageOptions={storageOptions}
