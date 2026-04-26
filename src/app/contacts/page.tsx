@@ -47,67 +47,106 @@ export default function ContactsPage() {
         </span>
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mb-12">
         {/* Адрес */}
         <div
-          className="rounded-3xl p-8 border"
+          className="group rounded-3xl p-6 md:p-7 border flex items-start gap-4 transition-all duration-200 hover:scale-[1.01] hover:shadow-lg"
           style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
         >
-          <p
-            className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-3 opacity-60"
-            style={{ color: 'var(--color-text)' }}
+          <span
+            className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white"
+            style={{ background: 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)' }}
+            aria-hidden
           >
-            Адрес
-          </p>
-          <p className="text-[1.0625rem] leading-snug mb-2" style={{ color: 'var(--color-text)' }}>
-            г. Орёл, ул. Автовокзальная, д. 1А
-          </p>
-          <p className="text-[14px]" style={{ color: 'var(--color-text-secondary)' }}>
-            Подземный переход
-          </p>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          </span>
+          <div className="flex-1 min-w-0">
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-1.5 opacity-60"
+              style={{ color: 'var(--color-text)' }}
+            >
+              Адрес
+            </p>
+            <p className="text-[16px] leading-snug font-medium mb-1" style={{ color: 'var(--color-text)' }}>
+              г. Орёл, ул. Автовокзальная, д. 1А
+            </p>
+            <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+              Подземный переход
+            </p>
+          </div>
         </div>
 
         {/* Время */}
         <div
-          className="rounded-3xl p-8 border"
+          className="group rounded-3xl p-6 md:p-7 border flex items-start gap-4 transition-all duration-200 hover:scale-[1.01] hover:shadow-lg"
           style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
         >
-          <p
-            className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-3 opacity-60"
-            style={{ color: 'var(--color-text)' }}
+          <span
+            className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white"
+            style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)' }}
+            aria-hidden
           >
-            Часы работы
-          </p>
-          <p className="text-[1.0625rem] leading-snug mb-2" style={{ color: 'var(--color-text)' }}>
-            Пн–Вс: 09:00 — 19:00
-          </p>
-          <p className="text-[14px]" style={{ color: 'var(--color-text-secondary)' }}>
-            Без выходных
-          </p>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </span>
+          <div className="flex-1 min-w-0">
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-1.5 opacity-60"
+              style={{ color: 'var(--color-text)' }}
+            >
+              Часы работы
+            </p>
+            <p className="text-[16px] leading-snug font-medium mb-1" style={{ color: 'var(--color-text)' }}>
+              Пн–Вс: 09:00 — 19:00
+            </p>
+            <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+              Без выходных
+            </p>
+          </div>
         </div>
 
         {/* Телефон */}
-        <div
-          className="rounded-3xl p-8 border"
-          style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
+        <a
+          href="tel:+79300632370"
+          className="group rounded-3xl p-6 md:p-7 border flex items-start gap-4 transition-all duration-200 hover:scale-[1.01] hover:shadow-lg"
+          style={{
+            background: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            textDecoration: 'none',
+          }}
         >
-          <p
-            className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-3 opacity-60"
-            style={{ color: 'var(--color-text)' }}
+          <span
+            className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white"
+            style={{ background: 'linear-gradient(135deg, #0066ff 0%, #00b4ff 100%)' }}
+            aria-hidden
           >
-            Телефон
-          </p>
-          <a
-            href="tel:+79300632370"
-            className="inline-block text-[1.25rem] font-semibold leading-snug mb-2 transition-colors hover:opacity-80"
-            style={{ color: 'var(--color-text)' }}
-          >
-            +7 930 063-23-70
-          </a>
-          <p className="text-[14px]" style={{ color: 'var(--color-text-secondary)' }}>
-            Звонки и WhatsApp
-          </p>
-        </div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z" />
+            </svg>
+          </span>
+          <div className="flex-1 min-w-0">
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-1.5 opacity-60"
+              style={{ color: 'var(--color-text)' }}
+            >
+              Телефон
+            </p>
+            <p
+              className="text-[20px] leading-snug font-bold mb-1 group-hover:opacity-80 transition-opacity"
+              style={{ color: 'var(--color-text)' }}
+            >
+              +7 930 063-23-70
+            </p>
+            <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+              Звонки и WhatsApp
+            </p>
+          </div>
+        </a>
 
         {/* Email + Соц */}
         <div
@@ -160,8 +199,9 @@ export default function ContactsPage() {
               className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
               style={{ background: '#0077FF', boxShadow: '0 4px 12px rgba(0,119,255,0.25)' }}
             >
+              {/* Официальный VK glyph (simpleicons.org/vk) */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M12.5 17.5h1.4c.5 0 .7-.3.7-.7 0-1.4 0-2.7 1-2.7.4 0 .9.3 1.7 1.1 1.4 1.4 1.7 2.3 2.6 2.3h2.4c.7 0 1-.3.8-.9-.3-.9-2-2.7-2.1-2.8-.4-.5-.5-.7 0-1.3.4-.4 2.6-3.2 2.8-4.3.1-.4 0-.8-.6-.8h-2.4c-.6 0-.8.3-.9.7 0 0-1.2 2.6-2.7 4.3-.5.5-.7.7-1 .7-.2 0-.4-.2-.4-.7v-4.1c0-.6-.2-.9-.7-.9H7.7c-.4 0-.6.2-.6.5 0 .6.9.7 1 2.4v3.6c0 .8-.1.9-.4.9-.7 0-2-2-3.1-4.3-.2-.5-.4-.7-1-.7H1.2c-.4 0-.6.2-.6.5 0 .7 1.5 4.6 4.5 7.7 2 2.1 4.7 3.2 7.4 3.2z"/>
+                <path d="M21.547 6.4a1.04 1.04 0 0 0-1.024-.8h-2.36c-.55 0-.886.196-1.077.65 0 0-1.45 3.07-3.07 5.16-.51.51-.74.673-1.018.673-.14 0-.342-.163-.342-.62V6.4c0-.547-.16-.8-.617-.8H8.31c-.342 0-.547.262-.547.51 0 .518.776.638.856 2.105v3.176c0 .697-.125.823-.404.823-.74 0-2.6-3.083-3.7-6.617-.215-.6-.43-.8-.984-.8H1.176c-.547 0-.66.262-.66.51 0 .57.74 3.86 3.84 8.21 2.066 2.974 4.99 4.583 7.65 4.583 1.6 0 1.797-.357 1.797-.886v-2.05c0-.6.127-.717.55-.717.31 0 .855.16 2.123 1.376 1.45 1.45 1.69 2.105 2.5 2.105h2.36c.547 0 .823-.275.665-.815-.345-1.066-2.66-3.26-2.764-3.404-.275-.345-.197-.5 0-.823 0 0 2.2-3.097 2.43-4.143z"/>
               </svg>
               <span className="text-[12px] font-semibold">VK</span>
             </a>
@@ -173,8 +213,9 @@ export default function ContactsPage() {
               className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
               style={{ background: '#229ED9', boxShadow: '0 4px 12px rgba(34,158,217,0.25)' }}
             >
+              {/* Официальный Telegram paper-plane glyph (simpleicons.org/telegram) */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M20.7 4 2.6 11c-1.2.5-1.2 1.2-.2 1.5l4.6 1.5L17.7 7c.5-.3 1-.2.6.2L9 15.5v.1l-.4 5c.4 0 .6-.2.9-.4l2.1-2 4.4 3.3c.8.5 1.4.2 1.6-.7L21.5 5c.3-1.2-.4-1.7-1.2-1z"/>
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
               </svg>
               <span className="text-[12px] font-semibold">Telegram</span>
             </a>
@@ -184,10 +225,14 @@ export default function ContactsPage() {
               rel="noopener noreferrer"
               aria-label="MAX"
               className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
-              style={{ background: '#1d1d1f', boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}
+              style={{
+                background: 'linear-gradient(135deg, #ff3d5a 0%, #ff5e7a 100%)',
+                boxShadow: '0 4px 12px rgba(255,61,90,0.30)',
+              }}
             >
+              {/* MAX (vk-messenger): жирная буква М в скруглённом квадрате */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M3 21V3h3l5 8 5-8h3v18h-3V9l-5 8L6 9v12z"/>
+                <path d="M4.5 4.5h2.6L12 12.3l4.9-7.8h2.6V19.5h-2.6V9.4l-4.9 7.7-4.9-7.7v10.1H4.5z" />
               </svg>
               <span className="text-[12px] font-semibold">MAX</span>
             </a>
