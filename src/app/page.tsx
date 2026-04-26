@@ -1,7 +1,6 @@
 import { fetchBrands } from '@/lib/phonebase-client';
 import HeroSlider from '@/components/hero/HeroSlider';
 import ShopLatestScroller from '@/components/scroller/ShopLatestScroller';
-import CategoryGrid from '@/components/categories/CategoryGrid';
 import HighlightCards from '@/components/highlights/HighlightCards';
 import FeaturedProducts from '@/components/catalog/FeaturedProducts';
 import HelpSection from '@/components/help/HelpSection';
@@ -34,8 +33,6 @@ export default async function HomePage() {
   return (
     <>
       <Schema />
-
-      <CategoryGrid />
 
       <HeroSlider />
 
