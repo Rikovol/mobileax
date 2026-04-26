@@ -220,21 +220,65 @@ export default function ContactsPage() {
           Отзывы клиентов
         </h2>
         <div
-          className="rounded-3xl overflow-hidden border"
-          style={{ borderColor: 'var(--color-border)' }}
+          className="rounded-3xl border p-6 md:p-7"
+          style={{
+            borderColor: 'var(--color-border)',
+            background: 'linear-gradient(135deg, #fffbed 0%, #fff5d6 100%)',
+          }}
         >
-          <iframe
-            src="https://yandex.ru/sprav/widget/rating-badge/1149010257?type=award"
-            width="100%"
-            height="100"
-            title="Рейтинг МобилАкс на Яндекс.Картах"
-            style={{ border: 0, display: 'block' }}
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-          <div className="px-5 py-4 md:px-6 md:py-5">
+          {/* Большая карточка рейтинга — собственный дизайн вместо мелкого iframe-badge */}
+          <a
+            href="https://yandex.ru/maps/org/mobilaks/1149010257/reviews/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-5 mb-5 group"
+            aria-label="Открыть отзывы на Яндекс.Картах"
+          >
+            {/* Цифра рейтинга */}
+            <div
+              className="flex-shrink-0 flex flex-col items-center justify-center rounded-2xl px-5 py-3"
+              style={{
+                background: 'linear-gradient(135deg, #ffcc00 0%, #ff9b21 100%)',
+                boxShadow: '0 6px 18px rgba(255,170,0,0.35)',
+                color: '#1d1d1f',
+                minWidth: 96,
+              }}
+            >
+              <div
+                className="font-bold tabular-nums leading-none"
+                style={{ fontSize: 'clamp(2rem, 5vw, 2.75rem)', letterSpacing: '-0.02em' }}
+              >
+                5,0
+              </div>
+              <div className="flex gap-0.5 mt-1.5" aria-hidden>
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <svg key={i} width="11" height="11" viewBox="0 0 24 24" fill="#1d1d1f">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+
+            {/* Текст рядом */}
+            <div className="flex-1 min-w-0">
+              <div
+                className="font-semibold leading-tight"
+                style={{ color: 'var(--color-text)', fontSize: 'clamp(1rem, 2vw, 1.125rem)' }}
+              >
+                Рейтинг на Яндекс.Картах
+              </div>
+              <div
+                className="text-[13px] mt-1 group-hover:underline"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Подтверждённые отзывы клиентов · смотреть все →
+              </div>
+            </div>
+          </a>
+
+          <div className="border-t pt-4" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
             <p className="text-[13px] mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-              Все отзывы — на Яндекс.Картах. Поделитесь своим, это помогает другим орловцам.
+              Поделитесь своим отзывом — это помогает другим орловцам выбрать правильный магазин.
             </p>
             <div className="flex flex-wrap gap-3">
               <a
