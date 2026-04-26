@@ -250,6 +250,14 @@ export default async function ProductPage({ params }: Props) {
               <BuyButton
                 productLabel={name}
                 priceLabel={formatPrice(product.price_effective)}
+                specs={{
+                  storage: product.storage,
+                  color: product.color,
+                  sim: formatSimType(product.sim_type),
+                  condition: product.condition,
+                  batteryPct: product.condition === 'used' ? product.battery_pct : null,
+                  completeness: product.condition === 'used' ? product.completeness : null,
+                }}
               />
               <Link
                 href={`/trade-in?model=${encodeURIComponent(name)}`}

@@ -11,6 +11,34 @@ const RATE_LIMIT_MS = 60_000;
 const STORAGE_KEY = 'mobileax_msg_last_sent_at';
 const USER_KEY = 'mobileax_msg_user';
 
+/**
+ * Маска российского мобильного: 7 (9XX) XXX-XX-XX или 8 (9XX) XXX-XX-XX.
+ * Принимает любую строку с цифрами и форматирует под маску.
+ */
+function formatPhone(input: string): string {
+  // Берём только цифры; первая 7 / 8 — код страны
+  const digits = input.replace(/\D/g, '').slice(0, 11);
+  if (!digits) return '';
+  let prefix = digits[0];
+  if (prefix !== '7' && prefix !== '8') {
+    prefix = '7';
+  }
+  const rest = digits.slice(1, 11); // максимум 10 цифр после кода
+  let out = prefix;
+  if (rest.length > 0) out += ` (${rest.slice(0, 3)}`;
+  if (rest.length >= 3) out += ')';
+  if (rest.length > 3) out += ` ${rest.slice(3, 6)}`;
+  if (rest.length > 6) out += `-${rest.slice(6, 8)}`;
+  if (rest.length > 8) out += `-${rest.slice(8, 10)}`;
+  return out;
+}
+
+/** Валиден ли номер: 11 цифр, начинается с 7 или 8, второй знак — 9. */
+function isValidRuPhone(input: string): boolean {
+  const digits = input.replace(/\D/g, '');
+  return /^[78]9\d{9}$/.test(digits);
+}
+
 export const MESSAGE_WIDGET_OPEN_EVENT = 'mobileax:open-message';
 export interface OpenMessageDetail {
   messageType?: 'contact' | 'order' | 'feedback';
@@ -226,6 +254,11 @@ export default function MessageWidget() {
 
     if (!name.trim() || !phone.trim() || !body.trim()) {
       setErrorMsg('Заполните имя, телефон и сообщение.');
+      setSubmitState('error');
+      return;
+    }
+    if (!isValidRuPhone(phone)) {
+      setErrorMsg('Укажите номер в формате 7 (9XX) XXX-XX-XX или 8 (9XX) XXX-XX-XX.');
       setSubmitState('error');
       return;
     }
@@ -476,12 +509,18 @@ export default function MessageWidget() {
                   </label>
                   <input
                     type="tel"
+                    inputMode="numeric"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(formatPhone(e.target.value))}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      setPhone(formatPhone(e.clipboardData.getData('text')));
+                    }}
                     required
                     className="w-full px-3 py-2.5 rounded-lg text-sm border"
                     style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg)' }}
-                    placeholder="+7 ___ ___ __ __"
+                    placeholder="7 (9__) ___-__-__"
+                    maxLength={18}
                   />
                 </div>
                 <div>
