@@ -84,10 +84,10 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-4" aria-label={theme.name}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/themes/mobileax/logo.svg"
+                src="/themes/mobileax/logo-f.svg"
                 alt={theme.name}
-                width={120}
-                height={32}
+                width={140}
+                height={38}
               />
             </Link>
             <p className="text-[13px] leading-relaxed mb-3" style={{ color: 'var(--color-text-secondary)' }}>

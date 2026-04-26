@@ -55,8 +55,8 @@ export default function Header() {
             <Image
               src="/themes/mobileax/logo.svg"
               alt={theme.name}
-              width={120}
-              height={32}
+              width={132}
+              height={36}
               priority
             />
           </Link>

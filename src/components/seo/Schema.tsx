@@ -5,7 +5,7 @@ const ORGANIZATION_SCHEMA = {
   '@type': 'Store',
   name: 'МобилАкс',
   url: 'https://xn--80abvjddo3a.xn--p1ai/',
-  logo: 'https://xn--80abvjddo3a.xn--p1ai/wa-data/public/site/themes/insales/img/logo.png',
+  logo: 'https://xn--80abvjddo3a.xn--p1ai/themes/mobileax/logo.png',
   telephone: '+7-930-063-23-70',
   email: 'info@mobileax.ru',
   address: {
