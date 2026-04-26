@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { CatalogItemOut } from '@/types/api';
-import { formatSimType } from '@/lib/utils';
+import { formatSimType, productHref } from '@/lib/utils';
 
 interface Props {
   /** Все варианты текущей модели (одинаковый brand+model, разные storage/color/sim_type). */
@@ -69,7 +69,13 @@ export default function ProductVariants({
               return (
                 <Link
                   key={v.storage ?? v.slug}
-                  href={`/product/${v.slug}`}
+                  href={productHref({
+                    brand: v.brand,
+                    model: v.model,
+                    storage: v.storage,
+                    color: v.color,
+                    slug: v.slug,
+                  })}
                   prefetch={false}
                   aria-current={active ? 'page' : undefined}
                   className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-[1.04] active:scale-[0.98]"
@@ -99,7 +105,13 @@ export default function ProductVariants({
               return (
                 <Link
                   key={v.sim_type ?? v.slug}
-                  href={`/product/${v.slug}`}
+                  href={productHref({
+                    brand: v.brand,
+                    model: v.model,
+                    storage: v.storage,
+                    color: v.color,
+                    slug: v.slug,
+                  })}
                   prefetch={false}
                   aria-current={active ? 'page' : undefined}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-[1.04] active:scale-[0.98]"
@@ -129,7 +141,13 @@ export default function ProductVariants({
               return (
                 <Link
                   key={v.color ?? v.slug}
-                  href={`/product/${v.slug}`}
+                  href={productHref({
+                    brand: v.brand,
+                    model: v.model,
+                    storage: v.storage,
+                    color: v.color,
+                    slug: v.slug,
+                  })}
                   prefetch={false}
                   aria-current={active ? 'page' : undefined}
                   className="inline-flex items-center gap-2 pl-1.5 pr-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 hover:scale-[1.04] active:scale-[0.98]"

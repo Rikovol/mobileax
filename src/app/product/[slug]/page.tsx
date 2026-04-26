@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchProduct, fetchCatalog } from '@/lib/phonebase-client';
-import { formatPrice, formatSimType } from '@/lib/utils';
+import { formatPrice, formatSimType, extractRealSlug, productHref } from '@/lib/utils';
 import ProductGallery from '@/components/product/ProductGallery';
 import BuyButton from '@/components/product/BuyButton';
 import ProductVariants from '@/components/product/ProductVariants';
@@ -13,13 +13,21 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const apiSlug = extractRealSlug(rawSlug);
   try {
-    const product = await fetchProduct(slug);
+    const product = await fetchProduct(apiSlug);
     const name = [product.brand, product.model, product.storage, product.color]
       .filter(Boolean)
       .join(' ');
-    const canonical = `https://xn--80abvjddo3a.xn--p1ai/product/${slug}`;
+    const canonicalPath = productHref({
+      brand: product.brand,
+      model: product.model,
+      storage: product.storage,
+      color: product.color,
+      slug: apiSlug,
+    });
+    const canonical = `https://xn--80abvjddo3a.xn--p1ai${canonicalPath}`;
     return {
       title: `${name} — купить в Орле`,
       description: `${name} в Орле. Цена ${formatPrice(product.price_effective)}. Гарантия, trade-in, рассрочка. Мобилакс.`,
@@ -66,7 +74,13 @@ function buildJsonLd(product: Awaited<ReturnType<typeof fetchProduct>>, slug: st
       priceCurrency: 'RUB',
       price: product.price_effective,
       availability,
-      url: `https://xn--80abvjddo3a.xn--p1ai/product/${slug}`,
+      url: `https://xn--80abvjddo3a.xn--p1ai${productHref({
+        brand: product.brand,
+        model: product.model,
+        storage: product.storage,
+        color: product.color,
+        slug,
+      })}`,
       seller: { '@type': 'Organization', name: 'Мобилакс' },
     },
   };
@@ -74,11 +88,12 @@ function buildJsonLd(product: Awaited<ReturnType<typeof fetchProduct>>, slug: st
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const apiSlug = extractRealSlug(rawSlug);
 
   let product = null;
   try {
-    product = await fetchProduct(slug);
+    product = await fetchProduct(apiSlug);
   } catch {
     // API not yet connected
   }
@@ -130,7 +145,7 @@ export default async function ProductPage({ params }: Props) {
       <script
         type="application/ld+json"
         // Safe: JSON.stringify escapes all special characters; no user HTML involved.
-        dangerouslySetInnerHTML={{ __html: buildJsonLd(product, slug) }}
+        dangerouslySetInnerHTML={{ __html: buildJsonLd(product, apiSlug) }}
       />
 
       <div className="section-container section-gap">
@@ -177,7 +192,7 @@ export default async function ProductPage({ params }: Props) {
             {/* Variants — память / цвет / SIM с переходом на другие slug'и той же модели */}
             <ProductVariants
               variants={variants}
-              currentSlug={slug}
+              currentSlug={apiSlug}
               currentStorage={product.storage}
               currentColor={product.color}
               currentSimType={product.sim_type}

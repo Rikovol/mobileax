@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import type { CatalogItemOut } from '@/types/api';
-import { formatPrice, discountLabel, mediaUrl, formatSimType } from '@/lib/utils';
+import { formatPrice, discountLabel, mediaUrl, formatSimType, productHref } from '@/lib/utils';
 
 interface Props {
   item: CatalogItemOut;
@@ -41,7 +41,13 @@ export default function ProductCard({ item }: Props) {
       className="h-full"
     >
       <Link
-        href={`/product/${item.slug}`}
+        href={productHref({
+          brand: item.brand,
+          model: item.model,
+          storage: item.storage,
+          color: item.color,
+          slug: item.slug,
+        })}
         className="product-card group flex flex-col h-full rounded-2xl bg-[var(--color-bg-secondary)] overflow-hidden transition-shadow duration-300 hover:shadow-[0_24px_48px_rgba(0,0,0,0.10)]"
         title={name}
       >
