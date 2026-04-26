@@ -78,16 +78,18 @@ export default function Footer() {
     >
       <div className="section-container py-14 md:py-20">
         {/* Top: brand + columns */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-10">
+        {/* 6 колонок: brand занимает 1 + 5 link-блоков по 1 = всё в одну строку.
+            На mobile (cols-2) brand растягивается на оба слота сверху. */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-8">
           {/* Brand column */}
-          <div className="col-span-2">
+          <div className="col-span-2 md:col-span-1">
             <Link href="/" className="logo-glow inline-flex mb-4" aria-label={theme.name}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/themes/mobileax/logo.png"
                 alt={theme.name}
-                width={200}
-                height={55}
+                width={140}
+                height={38}
                 style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.18))' }}
               />
             </Link>
