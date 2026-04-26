@@ -44,7 +44,7 @@ const PRODUCTS: HeroProductCard[] = [
 export default function HeroSlider() {
   return (
     <section aria-label="Витрина новинок" style={{ background: 'var(--color-bg)' }}>
-      <div className="section-container py-10 md:py-14">
+      <div className="section-container py-3 md:py-5">
         {/* Top headline — "Store. The latest is here." (минимум, как у Apple) */}
         <div className="mb-6 md:mb-8">
           <p

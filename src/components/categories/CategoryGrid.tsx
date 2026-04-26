@@ -10,7 +10,7 @@ import { CATEGORIES, categoryUrl } from '@/lib/taxonomy';
 export default function CategoryGrid() {
   return (
     <section aria-label="Категории" style={{ background: 'var(--color-bg)' }}>
-      <div className="py-12 md:py-16">
+      <div className="py-4 md:py-6">
         <div
           className="rf-cards-scroller-platter flex gap-3 md:gap-4 overflow-x-auto no-scrollbar"
           style={{
