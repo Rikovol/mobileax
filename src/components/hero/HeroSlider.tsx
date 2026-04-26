@@ -2,248 +2,270 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface HeroSlide {
-  id: number;
+interface CardSlide {
   eyebrow: string;
   title: string;
   subtitle: string;
   ctaLabel: string;
   ctaHref: string;
-  secondaryLabel: string;
-  secondaryHref: string;
   imgSrc: string;
   imgAlt: string;
   bg: string;
   textDark: boolean;
 }
 
-const SLIDES: HeroSlide[] = [
+interface HeroCard {
+  id: string;
+  slides: CardSlide[];
+  autoplayMs?: number;
+}
+
+const CARDS: HeroCard[] = [
   {
-    id: 0,
-    eyebrow: 'Новинка',
-    title: 'iPhone 17 Pro',
-    subtitle: 'Камера. Производительность. Титан.',
-    ctaLabel: 'Купить',
-    ctaHref: '/catalog/Apple',
-    secondaryLabel: 'Подробнее',
-    secondaryHref: '/catalog/Apple',
-    imgSrc: '/themes/mobileax/heroes/iphone-17-pro.jpg',
-    imgAlt: 'iPhone 17 Pro',
-    bg: '#000000',
-    textDark: false,
+    id: 'iphone',
+    autoplayMs: 6500,
+    slides: [
+      {
+        eyebrow: 'Новинка',
+        title: 'iPhone 17 Pro',
+        subtitle: 'Камера. Производительность. Титан.',
+        ctaLabel: 'Купить',
+        ctaHref: '/catalog/Apple?category=iphone',
+        imgSrc: '/themes/mobileax/heroes/iphone-17-pro.jpg',
+        imgAlt: 'iPhone 17 Pro',
+        bg: '#000000',
+        textDark: false,
+      },
+      {
+        eyebrow: 'Доступно',
+        title: 'iPhone 17e',
+        subtitle: 'Та же мощь. Цена приятнее.',
+        ctaLabel: 'Купить',
+        ctaHref: '/catalog/Apple?category=iphone',
+        imgSrc: '/themes/mobileax/heroes/iphone-17e.jpg',
+        imgAlt: 'iPhone 17e',
+        bg: '#fbfbfd',
+        textDark: true,
+      },
+    ],
   },
   {
-    id: 1,
-    eyebrow: 'Производительность',
-    title: 'MacBook',
-    subtitle: 'Лёгкий. Быстрый. До 18 часов работы.',
-    ctaLabel: 'Купить',
-    ctaHref: '/catalog/Apple',
-    secondaryLabel: 'Подробнее',
-    secondaryHref: '/catalog/Apple',
-    imgSrc: '/themes/mobileax/heroes/macbook.jpg',
-    imgAlt: 'MacBook',
-    bg: '#f5f5f7',
-    textDark: true,
+    id: 'mac',
+    autoplayMs: 7500,
+    slides: [
+      {
+        eyebrow: 'Производительность',
+        title: 'MacBook',
+        subtitle: 'Лёгкий. Быстрый. До 18 часов.',
+        ctaLabel: 'Купить',
+        ctaHref: '/catalog/Apple?category=mac',
+        imgSrc: '/themes/mobileax/heroes/macbook.jpg',
+        imgAlt: 'MacBook',
+        bg: '#fbfbfd',
+        textDark: true,
+      },
+      {
+        eyebrow: 'Звук',
+        title: 'AirPods Max',
+        subtitle: 'Активное шумоподавление',
+        ctaLabel: 'Купить',
+        ctaHref: '/catalog/Apple?category=airpods',
+        imgSrc: '/themes/mobileax/heroes/airpods-max.jpg',
+        imgAlt: 'AirPods Max',
+        bg: '#1d1d1f',
+        textDark: false,
+      },
+    ],
   },
   {
-    id: 2,
-    eyebrow: 'Trade-In',
-    title: 'Сдайте старое. Получите новое.',
-    subtitle: 'Мгновенная оценка при вас. Лучшая цена.',
-    ctaLabel: 'Оценить устройство',
-    ctaHref: '/trade-in',
-    secondaryLabel: 'Как это работает',
-    secondaryHref: '/trade-in',
-    imgSrc: '/themes/mobileax/heroes/airpods-max.jpg',
-    imgAlt: 'Trade-In',
-    bg: '#1d1d1f',
-    textDark: false,
+    id: 'trade-in',
+    autoplayMs: 8500,
+    slides: [
+      {
+        eyebrow: 'Trade-In',
+        title: 'Сдайте старое.\nПолучите новое.',
+        subtitle: 'Мгновенная оценка при вас.',
+        ctaLabel: 'Оценить устройство',
+        ctaHref: '/trade-in',
+        imgSrc: '/themes/mobileax/heroes/iphone-17-pro.jpg',
+        imgAlt: 'Trade-In iPhone',
+        bg: '#0a2a4a',
+        textDark: false,
+      },
+      {
+        eyebrow: 'Рассрочка 0%',
+        title: 'Сегодня — техника.\nПлатите потом.',
+        subtitle: 'До 24 месяцев без переплат.',
+        ctaLabel: 'Узнать условия',
+        ctaHref: '/delivery',
+        imgSrc: '/themes/mobileax/heroes/iphone-17e.jpg',
+        imgAlt: 'Рассрочка',
+        bg: '#1c1c1e',
+        textDark: false,
+      },
+    ],
   },
 ];
 
-const AUTOPLAY_MS = 5500;
-
-export default function HeroSlider() {
-  const [index, setIndex] = useState(0);
+function CardSliderInner({ card, big = false }: { card: HeroCard; big?: boolean }) {
+  const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const goTo = useCallback((i: number) => {
-    setIndex(((i % SLIDES.length) + SLIDES.length) % SLIDES.length);
-  }, []);
-
-  const next = useCallback(() => goTo(index + 1), [goTo, index]);
-  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
   useEffect(() => {
-    if (paused) return;
-    timerRef.current = setTimeout(() => goTo(index + 1), AUTOPLAY_MS);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [index, paused, goTo]);
-
-  // Keyboard arrows
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
-    }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [next, prev]);
+    if (paused || card.slides.length <= 1) return;
+    const t = setTimeout(
+      () => setIdx((i) => (i + 1) % card.slides.length),
+      card.autoplayMs ?? 6500,
+    );
+    return () => clearTimeout(t);
+  }, [idx, paused, card.slides.length, card.autoplayMs]);
 
   return (
-    <section
-      aria-label="Витрина"
-      className="relative"
-      style={{ background: 'var(--color-bg)' }}
+    <div
+      className="relative h-full"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative overflow-hidden" style={{ aspectRatio: '16/9', maxHeight: '720px' }}>
-        {SLIDES.map((s, i) => {
-          const dark = !s.textDark;
-          const active = i === index;
-          return (
-            <div
-              key={s.id}
-              role="group"
-              aria-label={`Слайд ${i + 1} из ${SLIDES.length}`}
-              aria-hidden={!active}
-              className="absolute inset-0 transition-opacity duration-700 ease-out"
-              style={{
-                opacity: active ? 1 : 0,
-                pointerEvents: active ? 'auto' : 'none',
-                background: s.bg,
-              }}
+      {card.slides.map((s, i) => {
+        const dark = !s.textDark;
+        const active = i === idx;
+        return (
+          <div
+            key={i}
+            className="absolute inset-0 transition-opacity duration-700 ease-out"
+            style={{
+              opacity: active ? 1 : 0,
+              pointerEvents: active ? 'auto' : 'none',
+              background: s.bg,
+            }}
+            aria-hidden={!active}
+          >
+            <Link
+              href={s.ctaHref}
+              className="group relative block h-full w-full"
+              aria-label={s.title}
+              style={{ textDecoration: 'none' }}
             >
-              {/* Background image — full bleed, right-aligned */}
-              <div className="absolute inset-0 flex items-center justify-end">
-                <div className="relative h-full w-full md:w-[60%]">
+              {/* Text — top */}
+              <div className={`relative z-10 ${big ? 'p-8 lg:p-10' : 'p-6 lg:p-7'}`}>
+                <p
+                  className={`font-semibold uppercase tracking-[0.14em] mb-3 ${
+                    big ? 'text-[12px]' : 'text-[11px]'
+                  }`}
+                  style={{ color: dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)' }}
+                >
+                  {s.eyebrow}
+                </p>
+                <h2
+                  className="font-semibold leading-tight mb-2 whitespace-pre-line"
+                  style={{
+                    fontSize: big ? 'clamp(1.5rem, 2.4vw, 2.25rem)' : 'clamp(1.125rem, 1.8vw, 1.5rem)',
+                    letterSpacing: '-0.03em',
+                    color: dark ? '#f5f5f7' : '#1d1d1f',
+                  }}
+                >
+                  {s.title}
+                </h2>
+                <p
+                  className={big ? 'text-[15px] mb-6' : 'text-[13px] mb-5'}
+                  style={{ color: dark ? 'rgba(255,255,255,0.62)' : '#6e6e73' }}
+                >
+                  {s.subtitle}
+                </p>
+                <span
+                  className="inline-flex items-center justify-center px-5 py-2 rounded-full text-white font-medium text-[13px] transition-opacity group-hover:opacity-90"
+                  style={{ background: '#0071e3' }}
+                >
+                  {s.ctaLabel}
+                </span>
+              </div>
+
+              {/* Image — fills bottom */}
+              <div className={`absolute left-0 right-0 bottom-0 ${big ? 'h-[55%]' : 'h-[50%]'}`}>
+                <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-[1.03]">
                   <Image
                     src={s.imgSrc}
                     alt={s.imgAlt}
                     fill
                     priority={i === 0}
-                    sizes="(max-width: 768px) 100vw, 60vw"
-                    className="object-contain object-right-bottom md:object-right"
+                    sizes={big ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
+                    className="object-contain object-bottom"
                   />
                 </div>
               </div>
+            </Link>
+          </div>
+        );
+      })}
 
-              {/* Text — left side, vertical center */}
-              <div className="relative h-full flex items-center">
-                <div
-                  className="px-6 md:px-16 max-w-[600px]"
-                  style={{ paddingLeft: 'max(24px, calc((100% - 1200px) / 2 + 24px))' }}
-                >
-                  <p
-                    className="text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.18em] mb-3"
-                    style={{ color: dark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.5)' }}
-                  >
-                    {s.eyebrow}
-                  </p>
-                  <h1
-                    className="font-semibold leading-[1.05]"
-                    style={{
-                      fontSize: 'clamp(2.25rem, 5.5vw, 4.5rem)',
-                      letterSpacing: '-0.04em',
-                      color: dark ? '#f5f5f7' : '#1d1d1f',
-                    }}
-                  >
-                    {s.title}
-                  </h1>
-                  <p
-                    className="mt-4 max-w-[460px]"
-                    style={{
-                      fontSize: 'clamp(1rem, 1.4vw, 1.25rem)',
-                      lineHeight: 1.4,
-                      color: dark ? 'rgba(255,255,255,0.72)' : '#6e6e73',
-                    }}
-                  >
-                    {s.subtitle}
-                  </p>
-                  <div className="mt-7 flex flex-wrap gap-3">
-                    <Link
-                      href={s.ctaHref}
-                      className="inline-flex items-center justify-center px-6 py-2.5 rounded-full text-white font-medium text-[15px] transition-opacity hover:opacity-90"
-                      style={{ background: '#0071e3' }}
-                    >
-                      {s.ctaLabel}
-                    </Link>
-                    <Link
-                      href={s.secondaryHref}
-                      className="inline-flex items-center justify-center px-6 py-2.5 rounded-full font-medium text-[15px] transition-colors"
-                      style={
-                        dark
-                          ? { color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }
-                          : { color: '#1d1d1f', border: '1px solid rgba(0,0,0,0.2)' }
-                      }
-                    >
-                      {s.secondaryLabel}
-                      <svg className="ml-1.5" width="11" height="11" viewBox="0 0 12 12" fill="none">
-                        <path
-                          d="M2.5 6h7m0 0L6 2.5M9.5 6L6 9.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Arrows */}
-        <button
-          type="button"
-          onClick={prev}
-          aria-label="Предыдущий слайд"
-          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full items-center justify-center transition-all hover:scale-105 active:scale-95"
-          style={{ background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.08)' }}
-        >
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M10 3L5 8L10 13" stroke="#1d1d1f" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-        <button
-          type="button"
-          onClick={next}
-          aria-label="Следующий слайд"
-          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full items-center justify-center transition-all hover:scale-105 active:scale-95"
-          style={{ background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.08)' }}
-        >
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3L11 8L6 13" stroke="#1d1d1f" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-
-        {/* Dots */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-          {SLIDES.map((s, i) => (
+      {/* Dots — only if >1 slide */}
+      {card.slides.length > 1 && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+          {card.slides.map((s, i) => (
             <button
-              key={s.id}
+              key={i}
               type="button"
-              onClick={() => goTo(i)}
-              aria-label={`Перейти к слайду ${i + 1}`}
-              aria-current={i === index}
-              className="h-1.5 rounded-full transition-all duration-300"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIdx(i);
+              }}
+              aria-label={`Слайд ${i + 1}`}
+              aria-current={i === idx}
+              className="h-1 rounded-full transition-all duration-300"
               style={{
-                width: i === index ? 24 : 8,
-                background: i === index
-                  ? (SLIDES[index].textDark ? '#1d1d1f' : '#f5f5f7')
-                  : (SLIDES[index].textDark ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.4)'),
+                width: i === idx ? 18 : 6,
+                background: !card.slides[idx].textDark
+                  ? i === idx
+                    ? 'rgba(255,255,255,0.9)'
+                    : 'rgba(255,255,255,0.35)'
+                  : i === idx
+                  ? 'rgba(0,0,0,0.7)'
+                  : 'rgba(0,0,0,0.2)',
               }}
             />
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CardWrapper({ card, big = false }: { card: HeroCard; big?: boolean }) {
+  return (
+    <div
+      className="relative rounded-3xl overflow-hidden"
+      style={{
+        minHeight: big ? 460 : 340,
+        background: card.slides[0].bg,
+      }}
+    >
+      <CardSliderInner card={card} big={big} />
+    </div>
+  );
+}
+
+export default function HeroSlider() {
+  return (
+    <section aria-label="Витрина" style={{ background: 'var(--color-bg)' }}>
+      <div className="section-container py-8 md:py-12">
+        {/* Desktop: 3 equal columns */}
+        <div className="hidden md:grid md:grid-cols-3 gap-3">
+          {CARDS.map((card) => (
+            <CardWrapper key={card.id} card={card} />
+          ))}
+        </div>
+
+        {/* Mobile: first card big, then 2-cell grid for rest */}
+        <div className="md:hidden flex flex-col gap-3">
+          <CardWrapper card={CARDS[0]} big />
+          <div className="grid grid-cols-2 gap-3">
+            {CARDS.slice(1).map((card) => (
+              <CardWrapper key={card.id} card={card} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
