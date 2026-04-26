@@ -35,9 +35,9 @@ export default async function HomePage() {
     <>
       <Schema />
 
-      <HeroSlider />
-
       <CategoryGrid />
+
+      <HeroSlider />
 
       <ShopLatestScroller />
 
