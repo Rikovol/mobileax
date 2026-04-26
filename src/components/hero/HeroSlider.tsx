@@ -45,21 +45,15 @@ export default function HeroSlider() {
   return (
     <section aria-label="Витрина новинок" style={{ background: 'var(--color-bg)' }}>
       <div className="section-container py-3 md:py-5">
-        {/* Top headline — "Store. The latest is here." (минимум, как у Apple) */}
-        <div className="mb-6 md:mb-8">
-          <p
-            className="text-[14px] md:text-[15px] font-semibold mb-1.5"
-            style={{ color: '#1d1d1f' }}
-          >
-            МобилАкс
-          </p>
+        {/* Top headline — Apple Store-style */}
+        <div className="mb-4 md:mb-5">
           <h1
             className="font-semibold tracking-tight"
             style={{
-              fontSize: 'clamp(1.75rem, 3.6vw, 2.75rem)',
-              letterSpacing: '-0.03em',
+              fontSize: 'clamp(1.25rem, 2.4vw, 1.75rem)',
+              letterSpacing: '-0.025em',
               color: '#1d1d1f',
-              lineHeight: 1.1,
+              lineHeight: 1.15,
             }}
           >
             Лучшее уже здесь.{' '}
