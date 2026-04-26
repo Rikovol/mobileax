@@ -96,36 +96,81 @@ export default function ContactsPage() {
           style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
         >
           <p
-            className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-3 opacity-60"
+            className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-4 opacity-60"
             style={{ color: 'var(--color-text)' }}
           >
             Email & соцсети
           </p>
+
+          {/* Email — карточка с иконкой */}
           <a
             href="mailto:info@mobileax.ru"
-            className="block text-[1.0625rem] mb-3 transition-colors hover:opacity-80"
-            style={{ color: 'var(--color-text)' }}
+            className="group flex items-center gap-3 mb-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:scale-[1.01]"
+            style={{ background: 'var(--color-bg-secondary)' }}
           >
-            info@mobileax.ru
+            <span
+              className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ background: '#0071e3', color: '#fff' }}
+              aria-hidden
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-10 5L2 7" />
+              </svg>
+            </span>
+            <div className="flex-1 min-w-0">
+              <div className="text-[11px] uppercase tracking-wider opacity-60" style={{ color: 'var(--color-text)' }}>
+                E-mail
+              </div>
+              <div
+                className="text-[15px] font-medium truncate group-hover:opacity-80 transition-opacity"
+                style={{ color: 'var(--color-text)' }}
+              >
+                info@mobileax.ru
+              </div>
+            </div>
           </a>
-          <div className="flex gap-3 text-[14px]">
+
+          {/* Соцсети — три кнопки в ряд с фирменными цветами и SVG-иконками */}
+          <div className="grid grid-cols-3 gap-2">
             <a
               href="https://vk.com/mobileaxorel"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: 'var(--color-accent)' }}
-              className="hover:opacity-80"
+              aria-label="VK"
+              className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+              style={{ background: '#0077FF', boxShadow: '0 4px 12px rgba(0,119,255,0.25)' }}
             >
-              VK
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M12.5 17.5h1.4c.5 0 .7-.3.7-.7 0-1.4 0-2.7 1-2.7.4 0 .9.3 1.7 1.1 1.4 1.4 1.7 2.3 2.6 2.3h2.4c.7 0 1-.3.8-.9-.3-.9-2-2.7-2.1-2.8-.4-.5-.5-.7 0-1.3.4-.4 2.6-3.2 2.8-4.3.1-.4 0-.8-.6-.8h-2.4c-.6 0-.8.3-.9.7 0 0-1.2 2.6-2.7 4.3-.5.5-.7.7-1 .7-.2 0-.4-.2-.4-.7v-4.1c0-.6-.2-.9-.7-.9H7.7c-.4 0-.6.2-.6.5 0 .6.9.7 1 2.4v3.6c0 .8-.1.9-.4.9-.7 0-2-2-3.1-4.3-.2-.5-.4-.7-1-.7H1.2c-.4 0-.6.2-.6.5 0 .7 1.5 4.6 4.5 7.7 2 2.1 4.7 3.2 7.4 3.2z"/>
+              </svg>
+              <span className="text-[12px] font-semibold">VK</span>
             </a>
             <a
               href="https://t.me/mobileaxorel"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: 'var(--color-accent)' }}
-              className="hover:opacity-80"
+              aria-label="Telegram"
+              className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+              style={{ background: '#229ED9', boxShadow: '0 4px 12px rgba(34,158,217,0.25)' }}
             >
-              Telegram
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M20.7 4 2.6 11c-1.2.5-1.2 1.2-.2 1.5l4.6 1.5L17.7 7c.5-.3 1-.2.6.2L9 15.5v.1l-.4 5c.4 0 .6-.2.9-.4l2.1-2 4.4 3.3c.8.5 1.4.2 1.6-.7L21.5 5c.3-1.2-.4-1.7-1.2-1z"/>
+              </svg>
+              <span className="text-[12px] font-semibold">Telegram</span>
+            </a>
+            <a
+              href="https://max.ru/mobileaxorel"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="MAX"
+              className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+              style={{ background: '#1d1d1f', boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M3 21V3h3l5 8 5-8h3v18h-3V9l-5 8L6 9v12z"/>
+              </svg>
+              <span className="text-[12px] font-semibold">MAX</span>
             </a>
           </div>
         </div>
