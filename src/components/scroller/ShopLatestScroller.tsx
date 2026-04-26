@@ -38,8 +38,7 @@ const CARDS: ScrollerCard[] = [
     ctaHref: '/catalog/Apple?category=iphone&line=17',
     imgSrc: '/themes/mobileax/heroes/iphone-17e.png',
     imgAlt: 'iPhone 17e',
-    bg: '#fbfbfd',
-    textDark: true,
+    bg: '#1d1d1f',
   },
   {
     id: 2,
@@ -50,8 +49,7 @@ const CARDS: ScrollerCard[] = [
     ctaHref: '/catalog/Apple?category=mac&line=macbook-pro',
     imgSrc: '/themes/mobileax/heroes/macbook.png',
     imgAlt: 'MacBook',
-    bg: '#fbfbfd',
-    textDark: true,
+    bg: '#1d1d1f',
   },
   {
     id: 3,
@@ -62,7 +60,8 @@ const CARDS: ScrollerCard[] = [
     ctaHref: '/catalog/Apple?category=airpods&line=max',
     imgSrc: '/themes/mobileax/heroes/airpods-max.png',
     imgAlt: 'AirPods Max',
-    bg: '#1d1d1f',
+    bg: '#fbfbfd',
+    textDark: true,
   },
   {
     id: 4,
