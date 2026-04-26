@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { X, MessageCircle, Check } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
+import { X, MessageCircle, Check, LogOut } from 'lucide-react';
+import type { AuthStatusOut, VisitorMe } from '@/types/api';
 
 const BASE_URL = process.env.NEXT_PUBLIC_PHONEBASE_API || '';
 const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID || '';
 const RATE_LIMIT_MS = 60_000;
 const STORAGE_KEY = 'mobileax_msg_last_sent_at';
-const USER_KEY = 'mobileax_msg_user'; // {name, phone, email} — для prefill между визитами
+const USER_KEY = 'mobileax_msg_user';
 
-/** Глобальный CustomEvent для открытия виджета с предзаполненными полями.
- *  Источник: кнопка «Купить» в карточке товара, любые другие триггеры.
- *  detail: { messageType?, subject?, body? } — все поля опциональны. */
 export const MESSAGE_WIDGET_OPEN_EVENT = 'mobileax:open-message';
 export interface OpenMessageDetail {
   messageType?: 'contact' | 'order' | 'feedback';
   subject?: string;
   body?: string;
+  /** Если true — модал откроется с обязательным шагом авторизации (для заказа). */
+  requireAuth?: boolean;
 }
 
 export function openMessageWidget(detail: OpenMessageDetail = {}) {
@@ -28,14 +29,22 @@ export function openMessageWidget(detail: OpenMessageDetail = {}) {
 type SubmitState = 'idle' | 'loading' | 'success' | 'error';
 type MessageType = 'contact' | 'order' | 'feedback';
 
-/**
- * Плавающая кнопка «Сообщения» — снизу справа на всех страницах.
- * Открывает модалку с формой контакта (имя, телефон, email, сообщение).
- * POST → phonebase /api/sites/{store_id}/messages с message_type='contact'.
- *
- * Анонимная (без OAuth — VK App ID и TG Bot Token пока не получены).
- * Защита: honeypot `website`, time_to_submit_ms ≥ 3000, rate-limit 60 сек.
- */
+declare global {
+  interface Window {
+    onTelegramAuth?: (user: TelegramAuthUser) => void;
+  }
+}
+
+interface TelegramAuthUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+}
+
 export default function MessageWidget() {
   const [open, setOpen] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
@@ -44,56 +53,107 @@ export default function MessageWidget() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [body, setBody] = useState('');
-  const [honey, setHoney] = useState(''); // hidden honeypot, должно быть пусто
+  const [honey, setHoney] = useState('');
   const [messageType, setMessageType] = useState<MessageType>('contact');
   const [subject, setSubject] = useState<string>('');
+  const [requireAuth, setRequireAuth] = useState(false);
+  const [authStatus, setAuthStatus] = useState<AuthStatusOut | null>(null);
+  const [me, setMe] = useState<VisitorMe | null>(null);
+  const [authBusy, setAuthBusy] = useState(false);
   const openedAtRef = useRef<number>(0);
 
-  useEffect(() => {
-    if (open) openedAtRef.current = Date.now();
-  }, [open]);
+  const refreshMe = useCallback(async () => {
+    if (!BASE_URL || !STORE_ID) return;
+    try {
+      const res = await fetch(`${BASE_URL}/api/sites/${STORE_ID}/auth/me`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const data = (await res.json()) as VisitorMe;
+        setMe(data);
+        if (data.display_name) setName(data.display_name);
+        if (data.contact_email) setEmail(data.contact_email);
+        if (data.contact_phone) setPhone(data.contact_phone);
+      } else {
+        setMe(null);
+      }
+    } catch {
+      setMe(null);
+    }
+  }, []);
 
-  // Prefill из localStorage при первом монтировании (если пользователь уже писал)
+  useEffect(() => {
+    if (!BASE_URL || !STORE_ID) return;
+    fetch(`${BASE_URL}/api/sites/${STORE_ID}/auth/status`)
+      .then((r) => (r.ok ? (r.json() as Promise<AuthStatusOut>) : null))
+      .then((s) => s && setAuthStatus(s))
+      .catch(() => {});
+    refreshMe();
+  }, [refreshMe]);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
       const raw = localStorage.getItem(USER_KEY);
       if (!raw) return;
       const stored = JSON.parse(raw) as { name?: string; phone?: string; email?: string };
-      if (stored.name) setName(stored.name);
-      if (stored.phone) setPhone(stored.phone);
-      if (stored.email) setEmail(stored.email);
+      if (stored.name && !name) setName(stored.name);
+      if (stored.phone && !phone) setPhone(stored.phone);
+      if (stored.email && !email) setEmail(stored.email);
     } catch {
-      // битый JSON — игнорируем
+      /* ignore */
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Подписываемся на CustomEvent от других компонентов (кнопка «Купить» и т.п.)
+  useEffect(() => {
+    if (open) openedAtRef.current = Date.now();
+  }, [open]);
+
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<OpenMessageDetail>).detail || {};
       setMessageType(detail.messageType || 'contact');
       setSubject(detail.subject || '');
       if (detail.body) setBody(detail.body);
+      setRequireAuth(!!detail.requireAuth || detail.messageType === 'order');
       setSubmitState('idle');
       setErrorMsg('');
       setOpen(true);
+      refreshMe();
     };
     window.addEventListener(MESSAGE_WIDGET_OPEN_EVENT, handler);
     return () => window.removeEventListener(MESSAGE_WIDGET_OPEN_EVENT, handler);
-  }, []);
+  }, [refreshMe]);
 
-  // ESC закрывает модалку
+  // Telegram Login Widget callback (глобальная функция)
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+    window.onTelegramAuth = async (user) => {
+      setAuthBusy(true);
+      setErrorMsg('');
+      try {
+        const res = await fetch(`${BASE_URL}/api/sites/${STORE_ID}/auth/telegram/callback`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user),
+        });
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error(txt.slice(0, 120));
+        }
+        await refreshMe();
+      } catch (err) {
+        setErrorMsg(err instanceof Error ? err.message : 'Telegram auth failed');
+      } finally {
+        setAuthBusy(false);
+      }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open]);
+    return () => {
+      delete window.onTelegramAuth;
+    };
+  }, [refreshMe]);
 
-  // Запрет скролла body когда открыта модалка (только на мобиле)
   useEffect(() => {
     if (!open) return;
     const original = document.body.style.overflow;
@@ -103,31 +163,57 @@ export default function MessageWidget() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
   const close = () => {
     setOpen(false);
     setSubmitState('idle');
     setErrorMsg('');
   };
 
-  // reset очищает всё, включая контакты — но мы не используем reset() после
-  // успеха, чтобы prefill между обращениями работал. Оставляем для будущих
-  // ручных «Очистить» кнопок если понадобятся.
-  const reset = () => {
-    setName('');
-    setPhone('');
-    setEmail('');
-    setBody('');
-    setHoney('');
-    setMessageType('contact');
-    setSubject('');
+  const startVkAuth = () => {
+    const url = `${BASE_URL}/api/sites/${STORE_ID}/auth/vk/start`;
+    const popup = window.open(url, 'vk_auth', 'width=600,height=750');
+    if (!popup) {
+      window.location.href = url;
+      return;
+    }
+    const checkClosed = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkClosed);
+        refreshMe();
+      }
+    }, 500);
   };
-  void reset; // подавляем unused warning, функция оставлена в API намеренно
+
+  const logout = async () => {
+    if (!BASE_URL || !STORE_ID) return;
+    try {
+      await fetch(`${BASE_URL}/api/sites/${STORE_ID}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+      /* ignore */
+    }
+    setMe(null);
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    // Rate limit
+    if (requireAuth && !me) {
+      setErrorMsg('Войдите через VK или Telegram, чтобы оформить заказ.');
+      setSubmitState('error');
+      return;
+    }
+
     if (typeof window !== 'undefined') {
       const last = Number(localStorage.getItem(STORAGE_KEY) || '0');
       const wait = RATE_LIMIT_MS - (Date.now() - last);
@@ -143,7 +229,6 @@ export default function MessageWidget() {
       setSubmitState('error');
       return;
     }
-
     if (!STORE_ID || !BASE_URL) {
       setErrorMsg('Сервис временно недоступен.');
       setSubmitState('error');
@@ -151,10 +236,10 @@ export default function MessageWidget() {
     }
 
     setSubmitState('loading');
-
     try {
       const res = await fetch(`${BASE_URL}/api/sites/${STORE_ID}/messages`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message_type: messageType,
@@ -173,7 +258,6 @@ export default function MessageWidget() {
       }
       if (typeof window !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, String(Date.now()));
-        // Сохраняем контактные данные для prefill при следующем открытии
         try {
           localStorage.setItem(
             USER_KEY,
@@ -184,29 +268,29 @@ export default function MessageWidget() {
             }),
           );
         } catch {
-          // localStorage может быть заполнен — не критично
+          /* ignore */
         }
       }
       setSubmitState('success');
-      // Через 4 сек автозакрытие. Имя/телефон/email НЕ сбрасываем —
-      // следующее открытие виджета подхватит их из state, body/subject — нет.
       setTimeout(() => {
         close();
         setBody('');
         setSubject('');
         setHoney('');
         setMessageType('contact');
+        setRequireAuth(false);
       }, 4000);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Не удалось отправить сообщение';
-      setErrorMsg(msg);
+      setErrorMsg(err instanceof Error ? err.message : 'Не удалось отправить сообщение');
       setSubmitState('error');
     }
   };
 
+  const showAuthBlock =
+    !me && (authStatus?.vk_available || authStatus?.telegram_available);
+
   return (
     <>
-      {/* Floating button */}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -220,7 +304,6 @@ export default function MessageWidget() {
         <MessageCircle size={22} strokeWidth={2.2} />
       </button>
 
-      {/* Modal */}
       {open && (
         <>
           <div
@@ -235,15 +318,8 @@ export default function MessageWidget() {
             aria-modal="true"
             aria-labelledby="msg-widget-title"
             className="fixed bottom-0 right-0 left-0 md:left-auto md:bottom-6 md:right-6 md:w-[420px] z-[101] bg-white shadow-2xl overflow-hidden flex flex-col"
-            style={{
-              maxHeight: '92vh',
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-            }}
+            style={{ maxHeight: '92vh', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
           >
-            {/* Заголовок */}
             <div
               className="flex items-center justify-between px-5 py-4 border-b"
               style={{ borderColor: 'var(--color-border)' }}
@@ -259,14 +335,13 @@ export default function MessageWidget() {
                 type="button"
                 onClick={close}
                 aria-label="Закрыть"
-                className="p-1.5 -mr-1 rounded-full transition-colors"
+                className="p-1.5 -mr-1 rounded-full"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
                 <X size={20} />
               </button>
             </div>
 
-            {/* Контент */}
             {submitState === 'success' ? (
               <div className="p-8 text-center" style={{ color: 'var(--color-text)' }}>
                 <div
@@ -281,23 +356,105 @@ export default function MessageWidget() {
                 </p>
               </div>
             ) : (
-              <form
-                onSubmit={onSubmit}
-                className="p-5 space-y-3 overflow-y-auto"
-                style={{ flex: 1 }}
-              >
+              <form onSubmit={onSubmit} className="p-5 space-y-3 overflow-y-auto" style={{ flex: 1 }}>
                 {messageType === 'order' && subject && (
                   <div
                     className="rounded-lg p-3 text-sm flex items-center gap-2"
-                    style={{
-                      background: 'rgba(0, 113, 227, 0.08)',
-                      color: 'var(--color-accent)',
-                    }}
+                    style={{ background: 'rgba(0, 113, 227, 0.08)', color: 'var(--color-accent)' }}
                   >
                     <span>🛒</span>
                     <span className="font-medium">{subject}</span>
                   </div>
                 )}
+
+                {me && (
+                  <div
+                    className="flex items-center gap-3 rounded-lg p-3"
+                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
+                  >
+                    {me.avatar_url ? (
+                      <Image
+                        src={me.avatar_url}
+                        alt={me.display_name || 'avatar'}
+                        width={36}
+                        height={36}
+                        unoptimized
+                        style={{ borderRadius: '50%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div
+                        className="w-9 h-9 rounded-full flex items-center justify-center font-semibold"
+                        style={{ background: '#e5e7eb', color: '#6b7280' }}
+                      >
+                        {(me.display_name || '?').charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>
+                        {me.display_name || 'Пользователь'}
+                      </div>
+                      <div className="text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
+                        {me.auth_provider === 'vk' ? 'через VK ID' : 'через Telegram'}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="text-[11px] flex items-center gap-1"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                      aria-label="Выйти"
+                    >
+                      <LogOut size={12} /> Выйти
+                    </button>
+                  </div>
+                )}
+
+                {showAuthBlock && (
+                  <div
+                    className="rounded-lg p-3 space-y-2 text-sm"
+                    style={{
+                      background:
+                        requireAuth && !me
+                          ? 'rgba(0, 113, 227, 0.08)'
+                          : 'rgba(0, 0, 0, 0.03)',
+                      border:
+                        requireAuth && !me
+                          ? '1px solid rgba(0, 113, 227, 0.3)'
+                          : '1px solid var(--color-border)',
+                    }}
+                  >
+                    <div className="font-medium text-[13px]" style={{ color: 'var(--color-text)' }}>
+                      {requireAuth
+                        ? 'Войдите для оформления заказа'
+                        : 'Войдите, чтобы мы знали, кто вы'}
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      {authStatus?.vk_available && (
+                        <button
+                          type="button"
+                          onClick={startVkAuth}
+                          disabled={authBusy}
+                          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-white font-medium text-[13px] disabled:opacity-50"
+                          style={{ background: '#0077FF' }}
+                        >
+                          <span style={{ fontWeight: 800 }}>VK ID</span>
+                        </button>
+                      )}
+                      {authStatus?.telegram_available && authStatus.telegram_bot_username && (
+                        <TelegramLoginButton
+                          botUsername={authStatus.telegram_bot_username}
+                          disabled={authBusy}
+                        />
+                      )}
+                    </div>
+                    {!requireAuth && (
+                      <div className="text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
+                        Или заполните форму ниже без авторизации.
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-[13px] font-medium mb-1" style={{ color: 'var(--color-text)' }}>
                     Имя <span style={{ color: 'var(--color-accent)' }}>*</span>
@@ -307,7 +464,8 @@ export default function MessageWidget() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="w-full px-3 py-2.5 rounded-lg text-sm border focus:outline-none transition-colors"
+                    disabled={!!me}
+                    className="w-full px-3 py-2.5 rounded-lg text-sm border disabled:opacity-70"
                     style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg)' }}
                     placeholder="Иван"
                   />
@@ -327,10 +485,7 @@ export default function MessageWidget() {
                   />
                 </div>
                 <div>
-                  <label
-                    className="block text-[13px] font-medium mb-1"
-                    style={{ color: 'var(--color-text)' }}
-                  >
+                  <label className="block text-[13px] font-medium mb-1" style={{ color: 'var(--color-text)' }}>
                     Email{' '}
                     <span style={{ color: 'var(--color-text-secondary)', fontWeight: 400 }}>
                       — необязательно
@@ -361,7 +516,6 @@ export default function MessageWidget() {
                   />
                 </div>
 
-                {/* Honeypot — скрыт от человека, но виден ботам */}
                 <input
                   type="text"
                   name="website"
@@ -369,13 +523,8 @@ export default function MessageWidget() {
                   onChange={(e) => setHoney(e.target.value)}
                   tabIndex={-1}
                   autoComplete="off"
-                  aria-hidden="true"
-                  style={{
-                    position: 'absolute',
-                    left: '-9999px',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                  }}
+                  aria-hidden
+                  style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
                 />
 
                 {submitState === 'error' && errorMsg && (
@@ -389,8 +538,8 @@ export default function MessageWidget() {
 
                 <button
                   type="submit"
-                  disabled={submitState === 'loading'}
-                  className="w-full py-3 rounded-full text-white font-semibold disabled:opacity-60 transition-transform hover:translate-y-[-1px]"
+                  disabled={submitState === 'loading' || (requireAuth && !me)}
+                  className="w-full py-3 rounded-full text-white font-semibold disabled:opacity-50 transition-transform hover:translate-y-[-1px]"
                   style={{
                     background: 'linear-gradient(135deg, #0066ff 0%, #00b4ff 100%)',
                     boxShadow: '0 6px 16px rgba(0, 120, 255, 0.35)',
@@ -421,5 +570,39 @@ export default function MessageWidget() {
         </>
       )}
     </>
+  );
+}
+
+/** Telegram Login Widget — динамически инжектит официальный <script>.
+ *  callback вызывает window.onTelegramAuth (см. useEffect выше). */
+function TelegramLoginButton({
+  botUsername,
+  disabled,
+}: {
+  botUsername: string;
+  disabled?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    // Очищаем старый widget при ре-mount (DOM-метод, не innerHTML)
+    while (node.firstChild) node.removeChild(node.firstChild);
+    const script = document.createElement('script');
+    script.src = 'https://telegram.org/js/telegram-widget.js?22';
+    script.async = true;
+    script.setAttribute('data-telegram-login', botUsername);
+    script.setAttribute('data-size', 'medium');
+    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+    script.setAttribute('data-request-access', 'write');
+    node.appendChild(script);
+  }, [botUsername]);
+
+  return (
+    <div
+      ref={ref}
+      style={{ flex: 1, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto' }}
+    />
   );
 }

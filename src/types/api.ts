@@ -144,11 +144,19 @@ export interface VisitorMe {
   store_id: string;
   auth_provider: 'vk' | 'telegram' | null;
   display_name: string | null;
+  avatar_url?: string | null;
   contact_phone: string | null;
   contact_email: string | null;
   preferred_channel: string | null;
   total_messages_count: number;
   last_seen_at: string | null; // ISO datetime
+}
+
+export interface AuthStatusOut {
+  vk_available: boolean;
+  telegram_available: boolean;
+  telegram_bot_username: string | null;
+  store_id: string;
 }
 
 // ---------------------------------------------------------------------------

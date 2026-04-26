@@ -18,6 +18,7 @@ export default function BuyButton({ productLabel, priceLabel }: Props) {
       messageType: 'order',
       subject: productLabel,
       body: `Хочу заказать: ${productLabel}${priceLabel ? ` (${priceLabel})` : ''}`,
+      requireAuth: true,
     });
   };
 
