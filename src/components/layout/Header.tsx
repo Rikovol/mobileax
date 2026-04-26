@@ -114,62 +114,62 @@ export default function Header() {
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Mobile drawer overlay */}
-        {mobileOpen && (
-          <div
-            className="fixed inset-0 z-40"
-            style={{ background: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setMobileOpen(false)}
-            aria-hidden="true"
-          />
-        )}
+      {/* Mobile drawer overlay — вне header, чтобы выйти из его stacking context */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-[100] lg:hidden"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
-        {/* Mobile drawer */}
-        <nav
-          className="fixed top-0 right-0 h-full w-[82%] max-w-[320px] z-50 flex flex-col overflow-y-auto transition-transform duration-300 lg:hidden"
-          style={{
-            background: '#1d1d1f',
-            color: '#f5f5f7',
-            transform: mobileOpen ? 'translateX(0)' : 'translateX(100%)',
-            padding: '24px 22px',
-          }}
-          aria-label="Мобильное меню"
-          aria-hidden={!mobileOpen}
+      {/* Mobile drawer — z-[110] чтобы поверх hero/scroller'ов */}
+      <nav
+        className="fixed top-0 right-0 h-full w-[82%] max-w-[320px] z-[110] flex flex-col overflow-y-auto transition-transform duration-300 lg:hidden"
+        style={{
+          background: '#1d1d1f',
+          color: '#f5f5f7',
+          transform: mobileOpen ? 'translateX(0)' : 'translateX(100%)',
+          padding: '24px 22px',
+        }}
+        aria-label="Мобильное меню"
+        aria-hidden={!mobileOpen}
+      >
+        <button
+          type="button"
+          aria-label="Закрыть"
+          className="self-end mb-3 text-[22px] leading-none"
+          style={{ color: '#d1d1d6', background: 'none', border: 0 }}
+          onClick={() => setMobileOpen(false)}
         >
-          <button
-            type="button"
-            aria-label="Закрыть"
-            className="self-end mb-3 text-[22px] leading-none"
-            style={{ color: '#d1d1d6', background: 'none', border: 0 }}
-            onClick={() => setMobileOpen(false)}
-          >
-            &times;
-          </button>
+          &times;
+        </button>
 
-          <div className="flex flex-col">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href + link.label}
-                href={link.href}
-                className="py-3.5 text-[17px] border-b"
-                style={{ color: '#f5f5f7', borderColor: '#2c2c2e' }}
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+        <div className="flex flex-col">
+          {NAV_LINKS.map((link) => (
             <Link
-              href="tel:+79300632370"
-              className="mt-6 text-[15px] font-semibold"
-              style={{ color: 'var(--color-accent)' }}
+              key={link.href + link.label}
+              href={link.href}
+              className="py-3.5 text-[17px] border-b"
+              style={{ color: '#f5f5f7', borderColor: '#2c2c2e' }}
               onClick={() => setMobileOpen(false)}
             >
-              +7 930 063-23-70
+              {link.label}
             </Link>
-          </div>
-        </nav>
-      </header>
+          ))}
+          <Link
+            href="tel:+79300632370"
+            className="mt-6 text-[15px] font-semibold"
+            style={{ color: 'var(--color-accent)' }}
+            onClick={() => setMobileOpen(false)}
+          >
+            +7 930 063-23-70
+          </Link>
+        </div>
+      </nav>
     </>
   );
 }
