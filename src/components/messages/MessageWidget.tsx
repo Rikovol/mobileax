@@ -91,6 +91,8 @@ export default function MessageWidget() {
   const [me, setMe] = useState<VisitorMe | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
   const openedAtRef = useRef<number>(0);
+  const triggerRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   const refreshMe = useCallback(async () => {
     if (!BASE_URL || !STORE_ID) return;
@@ -137,7 +139,65 @@ export default function MessageWidget() {
   }, []);
 
   useEffect(() => {
-    if (open) openedAtRef.current = Date.now();
+    if (open) {
+      openedAtRef.current = Date.now();
+      // Сохраняем элемент-триггер (FAB или BuyButton), чтобы вернуть фокус при закрытии.
+      if (typeof document !== 'undefined') {
+        triggerRef.current = document.activeElement as HTMLElement | null;
+      }
+    }
+  }, [open]);
+
+  // Focus trap + initial focus + focus restoration (WCAG AA).
+  useEffect(() => {
+    if (!open) return;
+
+    const FOCUSABLE_SELECTOR =
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const getFocusable = (): HTMLElement[] => {
+      const dialog = dialogRef.current;
+      if (!dialog) return [];
+      return Array.from(
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      ).filter(
+        (el) =>
+          !el.hasAttribute('aria-hidden') &&
+          el.offsetParent !== null,
+      );
+    };
+
+    const focusTimer = window.setTimeout(() => {
+      const focusable = getFocusable();
+      if (focusable.length > 0) focusable[0].focus();
+    }, 50);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener('keydown', onKeyDown);
+      // Возврат фокуса на триггер после закрытия модала.
+      const trigger = triggerRef.current;
+      if (trigger && typeof trigger.focus === 'function') {
+        trigger.focus({ preventScroll: true });
+      }
+    };
   }, [open]);
 
   useEffect(() => {
@@ -386,6 +446,7 @@ export default function MessageWidget() {
           />
 
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="msg-widget-title"
