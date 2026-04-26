@@ -77,8 +77,26 @@ const COLOR_WORDS = buildColorWords();
  * Returns the series key for a model — used for accordion grouping.
  * Logic ported 1:1 from tradein-widget.js modelSeries().
  */
+/**
+ * Бренды/слова с фиксированным правописанием в выдаче — phonebase возвращает
+ * их в разных регистрах ("Redmi Note 15" / "REDMI Note 15"), что приводит
+ * к дублированию серий. Нормализуем здесь.
+ */
+function normalizeBrandCasing(model: string): string {
+  return model
+    .replace(/\bREDMI\b/g, 'Redmi')
+    .replace(/\bIPHONE\b/gi, 'iPhone')
+    .replace(/\bIPAD\b/gi, 'iPad')
+    .replace(/\bMACBOOK\b/gi, 'MacBook')
+    .replace(/\bAIRPODS\b/gi, 'AirPods')
+    .replace(/\bSAMSUNG\b/g, 'Samsung')
+    .replace(/\bGALAXY\b/g, 'Galaxy')
+    .replace(/\bXIAOMI\b/g, 'Xiaomi')
+    .replace(/\bPOCO\b/g, 'POCO');
+}
+
 export function seriesKey(model: string): string {
-  const parts = model.split(/\s+/).filter(Boolean);
+  const parts = normalizeBrandCasing(model).split(/\s+/).filter(Boolean);
   const out: string[] = [];
   let seenNumber = false;
 
