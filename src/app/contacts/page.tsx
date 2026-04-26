@@ -36,10 +36,10 @@ export default function ContactsPage() {
             Адрес
           </p>
           <p className="text-[1.0625rem] leading-snug mb-2" style={{ color: 'var(--color-text)' }}>
-            г. Орёл, ул. Автовокзальная, д. 1
+            г. Орёл, ул. Автовокзальная, д. 1А
           </p>
           <p className="text-[14px]" style={{ color: 'var(--color-text-secondary)' }}>
-            ТЦ «АвтоВокзал», 1 этаж
+            Подземный переход
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export default function ContactsPage() {
         </div>
       </div>
 
-      {/* Карта Яндекс */}
+      {/* Карта Яндекс с карточкой организации (org_id=1149010257) */}
       <section className="mb-12">
         <h2
           className="font-semibold tracking-tight mb-5"
@@ -139,14 +139,79 @@ export default function ContactsPage() {
           style={{ borderColor: 'var(--color-border)', aspectRatio: '16/9' }}
         >
           <iframe
-            src="https://yandex.ru/map-widget/v1/?ll=36.090876%2C52.953619&z=16&pt=36.090876%2C52.953619%2Cpm2rdm"
+            src="https://yandex.ru/map-widget/v1/?z=17&ol=biz&oid=1149010257"
             width="100%"
             height="100%"
-            frameBorder="0"
             allowFullScreen
-            title="МобилАкс на карте Яндекс"
+            title="МобилАкс на Яндекс.Картах"
             style={{ border: 0, display: 'block' }}
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
+        </div>
+        <p className="mt-3 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <a
+            href="https://yandex.ru/maps/org/mobilaks/1149010257/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--color-accent)' }}
+          >
+            Открыть в Яндекс.Картах →
+          </a>
+        </p>
+      </section>
+
+      {/* Отзывы Яндекс */}
+      <section className="mb-12">
+        <h2
+          className="font-semibold tracking-tight mb-5"
+          style={{ fontSize: 'clamp(1.375rem, 2.6vw, 1.75rem)', letterSpacing: '-0.025em' }}
+        >
+          Отзывы клиентов
+        </h2>
+        <div
+          className="rounded-3xl overflow-hidden border"
+          style={{ borderColor: 'var(--color-border)', minHeight: 480 }}
+        >
+          <iframe
+            src="https://yandex.ru/sprav/widget/rating-badge/1149010257?type=award"
+            width="100%"
+            height="120"
+            title="Рейтинг МобилАкс на Яндекс.Картах"
+            style={{ border: 0, display: 'block' }}
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+          <div className="p-6 md:p-8">
+            <p className="text-[14px] mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+              Все отзывы клиентов читайте на Яндекс.Картах. Поделитесь своим — это помогает другим
+              орловцам выбрать правильный магазин.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://yandex.ru/maps/org/mobilaks/1149010257/reviews/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-white font-medium text-[14px] transition-opacity hover:opacity-90"
+                style={{ background: '#0071e3' }}
+              >
+                Все отзывы →
+              </a>
+              <a
+                href="https://yandex.ru/maps/org/mobilaks/1149010257/?action=newReview"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full font-medium text-[14px] transition-colors"
+                style={{
+                  color: 'var(--color-text)',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                }}
+              >
+                Оставить отзыв
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
