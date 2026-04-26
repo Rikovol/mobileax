@@ -16,11 +16,12 @@ const FOOTER_COLS = [
     ],
   },
   {
-    heading: 'Samsung',
+    heading: 'Бренды',
     links: [
-      { label: 'Galaxy S', href: '/catalog/Samsung?category=galaxy-s' },
-      { label: 'Galaxy A', href: '/catalog/Samsung?category=galaxy-a' },
-      { label: 'Galaxy Watch', href: '/catalog/Samsung?category=galaxy-watch' },
+      { label: 'Samsung', href: '/catalog/Samsung?category=samsung' },
+      { label: 'Sony', href: '/catalog/Sony?category=sony' },
+      { label: 'Dyson', href: '/catalog/Dyson?category=dyson' },
+      { label: 'JBL', href: '/catalog/JBL?category=jbl' },
       { label: 'Б/У техника', href: '/used' },
     ],
   },

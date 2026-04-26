@@ -23,9 +23,19 @@ export interface Category {
   /** Иконка из public/themes/mobileax/categories/ */
   icon: string;
   lines: CategoryLine[];
+  /** Кастомная ссылка (если задана — игнорирует brand-based URL). */
+  customHref?: string;
 }
 
 export const CATEGORIES: Category[] = [
+  {
+    slug: 'used',
+    brand: 'Apple', // multi-brand, главное — condition=used
+    label: 'Б/У техника',
+    icon: '/themes/mobileax/categories/used.png',
+    lines: [],
+    customHref: '/used',
+  },
   {
     slug: 'iphone',
     brand: 'Apple',
@@ -94,19 +104,10 @@ export const CATEGORIES: Category[] = [
     ],
   },
   {
-    slug: 'vision',
-    brand: 'Apple',
-    label: 'Vision',
-    icon: '/themes/mobileax/categories/vision-pro.png',
-    lines: [
-      { slug: 'pro', label: 'Vision Pro', searchQuery: 'Vision Pro' },
-    ],
-  },
-  {
-    slug: 'galaxy-s',
+    slug: 'samsung',
     brand: 'Samsung',
-    label: 'Galaxy S',
-    icon: '/themes/mobileax/categories/iphone.png', // TODO Samsung icon
+    label: 'Samsung',
+    icon: '/themes/mobileax/heroes/iphone-17e.jpg', // TODO заменить на Samsung Galaxy S26 PNG
     lines: [
       { slug: 's26-ultra', label: 'Galaxy S26 Ultra', searchQuery: 'Galaxy S26 Ultra' },
       { slug: 's26-plus', label: 'Galaxy S26+', searchQuery: 'Galaxy S26+' },
@@ -114,31 +115,36 @@ export const CATEGORIES: Category[] = [
       { slug: 's25-ultra', label: 'Galaxy S25 Ultra', searchQuery: 'Galaxy S25 Ultra' },
       { slug: 's25', label: 'Galaxy S25', searchQuery: 'Galaxy S25 ' },
       { slug: 's24', label: 'Galaxy S24', searchQuery: 'Galaxy S24' },
-    ],
-  },
-  {
-    slug: 'galaxy-a',
-    brand: 'Samsung',
-    label: 'Galaxy A',
-    icon: '/themes/mobileax/categories/iphone.png', // TODO
-    lines: [
       { slug: 'a56', label: 'Galaxy A56', searchQuery: 'Galaxy A56' },
       { slug: 'a36', label: 'Galaxy A36', searchQuery: 'Galaxy A36' },
       { slug: 'a26', label: 'Galaxy A26', searchQuery: 'Galaxy A26' },
       { slug: 'a25', label: 'Galaxy A25', searchQuery: 'Galaxy A25' },
       { slug: 'a17', label: 'Galaxy A17', searchQuery: 'Galaxy A17' },
       { slug: 'a07', label: 'Galaxy A07', searchQuery: 'Galaxy A07' },
-    ],
-  },
-  {
-    slug: 'galaxy-watch',
-    brand: 'Samsung',
-    label: 'Galaxy Watch',
-    icon: '/themes/mobileax/categories/watch.png',
-    lines: [
       { slug: 'watch-8-ultra', label: 'Galaxy Watch 8 Ultra', searchQuery: 'Galaxy Watch 8 Ultra' },
       { slug: 'watch-7-ultra', label: 'Galaxy Watch 7 Ultra', searchQuery: 'Galaxy Watch 7 Ultra' },
     ],
+  },
+  {
+    slug: 'sony',
+    brand: 'Sony',
+    label: 'Sony',
+    icon: '/themes/mobileax/categories/sony.png',
+    lines: [],
+  },
+  {
+    slug: 'dyson',
+    brand: 'Dyson',
+    label: 'Dyson',
+    icon: '/themes/mobileax/categories/dyson.png',
+    lines: [],
+  },
+  {
+    slug: 'jbl',
+    brand: 'JBL',
+    label: 'JBL',
+    icon: '/themes/mobileax/categories/jbl.png',
+    lines: [],
   },
 ];
 
@@ -153,8 +159,9 @@ export function getCategoriesByBrand(brand: string): Category[] {
   return CATEGORIES.filter((c) => c.brand.toLowerCase() === b);
 }
 
-/** Построить URL: /catalog/<brand>?category=<cat>&line=<line>. */
+/** Построить URL для категории. Использует customHref если задан, иначе /catalog/<brand>?category=...&line=... */
 export function categoryUrl(category: Category, line?: CategoryLine | string): string {
+  if (category.customHref && !line) return category.customHref;
   const params = new URLSearchParams();
   params.set('category', category.slug);
   if (line) {

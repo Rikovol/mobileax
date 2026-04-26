@@ -14,8 +14,8 @@ const NAV_LINKS = [
   { label: 'iPad', href: '/catalog/Apple?category=ipad' },
   { label: 'Watch', href: '/catalog/Apple?category=watch' },
   { label: 'AirPods', href: '/catalog/Apple?category=airpods' },
-  { label: 'Galaxy S', href: '/catalog/Samsung?category=galaxy-s' },
-  { label: 'Galaxy A', href: '/catalog/Samsung?category=galaxy-a' },
+  { label: 'Samsung', href: '/catalog/Samsung?category=samsung' },
+  { label: 'Sony', href: '/catalog/Sony?category=sony' },
   { label: 'Trade-In', href: '/trade-in' },
   { label: 'Б/У', href: '/used' },
 ];
