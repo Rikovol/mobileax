@@ -81,13 +81,13 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-10">
           {/* Brand column */}
           <div className="col-span-2">
-            <Link href="/" className="inline-block mb-4" aria-label={theme.name}>
+            <Link href="/" className="logo-glow inline-flex mb-4" aria-label={theme.name}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/themes/mobileax/logo.png"
                 alt={theme.name}
-                width={140}
-                height={38}
+                width={170}
+                height={47}
               />
             </Link>
             <p className="text-[13px] leading-relaxed mb-3" style={{ color: 'var(--color-text-secondary)' }}>

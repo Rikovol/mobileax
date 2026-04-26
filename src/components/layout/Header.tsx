@@ -51,12 +51,16 @@ export default function Header() {
           style={{ padding: '0 max(20px, calc((100% - 980px) / 2))' }}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center shrink-0 mr-8" aria-label={theme.name}>
+          <Link
+            href="/"
+            className="logo-glow flex items-center shrink-0 mr-8"
+            aria-label={theme.name}
+          >
             <Image
               src="/themes/mobileax/logo.png"
               alt={theme.name}
-              width={132}
-              height={36}
+              width={156}
+              height={43}
               priority
             />
           </Link>
