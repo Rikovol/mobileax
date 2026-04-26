@@ -119,10 +119,16 @@ export default function CategoryGrid() {
           <div
             ref={scrollerRef}
             data-core-scroller=""
-            className="rf-cards-scroller-content overflow-x-auto no-scrollbar"
+            className="rf-cards-scroller-content no-scrollbar"
             style={{
+              overflowX: 'auto',
+              overflowY: 'visible',
               scrollSnapType: 'x mandatory',
               WebkitOverflowScrolling: 'touch',
+              paddingTop: 16,
+              paddingBottom: 16,
+              marginTop: -16,
+              marginBottom: -16,
             }}
           >
             <div
