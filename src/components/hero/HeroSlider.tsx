@@ -28,12 +28,12 @@ const PRODUCTS: HeroProductCard[] = [
     variant: 'pro',
   },
   {
-    eyebrow: 'iPhone 17e',
-    title: 'iPhone в новом ключе.',
-    cta: 'Купить',
-    ctaHref: '/catalog/Apple?category=iphone&line=17',
-    imgSrc: '/themes/mobileax/heroes/iphone-17e.png',
-    imgAlt: 'iPhone 17e',
+    eyebrow: 'Trade-In',
+    title: 'Сдай старый — получи скидку.',
+    cta: 'Оценить',
+    ctaHref: '/trade-in',
+    imgSrc: '/themes/mobileax/heroes/tradein.png',
+    imgAlt: 'Trade-In: обмен старого телефона на новый',
     variant: 'e',
   },
 ];

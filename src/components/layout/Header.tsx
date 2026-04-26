@@ -189,6 +189,52 @@ export default function Header() {
           >
             +7 930 063-23-70
           </Link>
+
+          {/* Социальные сети — VK / Telegram / MAX */}
+          <div className="mt-5 flex gap-3">
+            <a
+              href="https://vk.com/mobileaxorel"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="VK"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-full text-[13px] font-semibold transition-transform active:scale-[0.96]"
+              style={{ background: '#0077FF', color: '#fff' }}
+              onClick={() => setMobileOpen(false)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M12.5 17.5h1.4c.5 0 .7-.3.7-.7 0-1.4 0-2.7 1-2.7.4 0 .9.3 1.7 1.1 1.4 1.4 1.7 2.3 2.6 2.3h2.4c.7 0 1-.3.8-.9-.3-.9-2-2.7-2.1-2.8-.4-.5-.5-.7 0-1.3.4-.4 2.6-3.2 2.8-4.3.1-.4 0-.8-.6-.8h-2.4c-.6 0-.8.3-.9.7 0 0-1.2 2.6-2.7 4.3-.5.5-.7.7-1 .7-.2 0-.4-.2-.4-.7v-4.1c0-.6-.2-.9-.7-.9H7.7c-.4 0-.6.2-.6.5 0 .6.9.7 1 2.4v3.6c0 .8-.1.9-.4.9-.7 0-2-2-3.1-4.3-.2-.5-.4-.7-1-.7H1.2c-.4 0-.6.2-.6.5 0 .7 1.5 4.6 4.5 7.7 2 2.1 4.7 3.2 7.4 3.2z"/>
+              </svg>
+              VK
+            </a>
+            <a
+              href="https://t.me/mobileaxorel"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Telegram"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-full text-[13px] font-semibold transition-transform active:scale-[0.96]"
+              style={{ background: '#229ED9', color: '#fff' }}
+              onClick={() => setMobileOpen(false)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M20.7 4 2.6 11c-1.2.5-1.2 1.2-.2 1.5l4.6 1.5L17.7 7c.5-.3 1-.2.6.2L9 15.5v.1l-.4 5c.4 0 .6-.2.9-.4l2.1-2 4.4 3.3c.8.5 1.4.2 1.6-.7L21.5 5c.3-1.2-.4-1.7-1.2-1z"/>
+              </svg>
+              Telegram
+            </a>
+            <a
+              href="https://max.ru/mobileaxorel"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="MAX"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-full text-[13px] font-semibold transition-transform active:scale-[0.96]"
+              style={{ background: '#1d1d1f', color: '#fff', border: '1px solid #3a3a3c' }}
+              onClick={() => setMobileOpen(false)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M3 21V3h3l5 8 5-8h3v18h-3V9l-5 8L6 9v12z"/>
+              </svg>
+              MAX
+            </a>
+          </div>
         </div>
       </nav>
     </>
