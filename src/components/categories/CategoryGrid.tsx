@@ -10,22 +10,6 @@ import { CATEGORIES, categoryUrl } from '@/lib/taxonomy';
  * с маленькими category cards. Каждая card с соответствующим background-цветом.
  */
 
-interface CategoryColor {
-  bg: string;
-}
-
-const CATEGORY_COLORS: Record<string, CategoryColor> = {
-  iphone: { bg: '#fbfbfd' },
-  mac: { bg: '#f5f5f7' },
-  ipad: { bg: '#e8eef7' },
-  watch: { bg: '#f0f0f3' },
-  airpods: { bg: '#fbfbfd' },
-  vision: { bg: '#f0eaeb' },
-  'galaxy-s': { bg: '#1c1c1e' },
-  'galaxy-a': { bg: '#fbfbfd' },
-  'galaxy-watch': { bg: '#f5f5f7' },
-};
-
 function ArrowButton({
   direction,
   disabled,
@@ -147,17 +131,13 @@ export default function CategoryGrid() {
                 paddingRight: 'max(20px, calc((100% - 1200px) / 2 + 20px))',
               }}
             >
-              {CATEGORIES.map((cat) => {
-                const colors = CATEGORY_COLORS[cat.slug] ?? { bg: '#fbfbfd' };
-                const dark = colors.bg.startsWith('#1') || colors.bg.startsWith('#0');
-                return (
+              {CATEGORIES.map((cat) => (
                   <Link
                     key={cat.slug}
                     href={categoryUrl(cat)}
                     data-category-card
-                    className="group relative flex flex-col flex-shrink-0 rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
+                    className="group relative flex flex-col flex-shrink-0 transition-transform duration-300 hover:scale-[1.04]"
                     style={{
-                      background: colors.bg,
                       width: 'clamp(130px, 32vw, 170px)',
                       height: 200,
                       scrollSnapAlign: 'start',
@@ -166,32 +146,31 @@ export default function CategoryGrid() {
                     aria-label={cat.label}
                   >
                     {/* Label — top */}
-                    <div className="relative z-10 px-4 pt-4">
+                    <div className="relative z-10 pt-1">
                       <h3
-                        className="font-semibold leading-tight tracking-tight"
+                        className="font-semibold leading-tight tracking-tight text-center"
                         style={{
                           fontSize: '0.9375rem',
                           letterSpacing: '-0.02em',
-                          color: dark ? '#f5f5f7' : '#1d1d1f',
+                          color: '#1d1d1f',
                         }}
                       >
                         {cat.label}
                       </h3>
                     </div>
 
-                    {/* Image — fills bottom */}
-                    <div className="relative flex-1 px-3 pb-3">
+                    {/* Image — без card background, fills остальное */}
+                    <div className="relative flex-1 mt-2">
                       <Image
                         src={cat.icon}
                         alt={cat.label}
                         fill
-                        className="object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.04]"
+                        className="object-contain transition-transform duration-500 group-hover:scale-[1.04]"
                         sizes="170px"
                       />
                     </div>
                   </Link>
-                );
-              })}
+                ))}
             </div>
           </div>
         </div>
