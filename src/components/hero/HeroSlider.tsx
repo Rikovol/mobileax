@@ -236,7 +236,7 @@ function CardSliderInner({ card, big = false }: { card: HeroCard; big?: boolean 
 function CardWrapper({ card, big = false }: { card: HeroCard; big?: boolean }) {
   return (
     <div
-      className="relative rounded-3xl overflow-hidden"
+      className="relative rounded-3xl overflow-hidden flex-1 min-w-0"
       style={{
         minHeight: big ? 460 : 340,
         background: card.slides[0].bg,
@@ -251,21 +251,10 @@ export default function HeroSlider() {
   return (
     <section aria-label="Витрина" style={{ background: 'var(--color-bg)' }}>
       <div className="section-container py-8 md:py-12">
-        {/* Desktop: 3 equal columns */}
-        <div className="hidden md:grid md:grid-cols-3 gap-3">
+        <div className="rf-cards-scroller-platter flex gap-4">
           {CARDS.map((card) => (
             <CardWrapper key={card.id} card={card} />
           ))}
-        </div>
-
-        {/* Mobile: first card big, then 2-cell grid for rest */}
-        <div className="md:hidden flex flex-col gap-3">
-          <CardWrapper card={CARDS[0]} big />
-          <div className="grid grid-cols-2 gap-3">
-            {CARDS.slice(1).map((card) => (
-              <CardWrapper key={card.id} card={card} />
-            ))}
-          </div>
         </div>
       </div>
     </section>
