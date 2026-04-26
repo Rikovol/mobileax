@@ -368,7 +368,11 @@ function NavBar({
 // Step: Brand
 // ---------------------------------------------------------------------------
 
-const BRAND_ICONS: Record<string, string> = { Apple: '🍎', Samsung: '📱', Xiaomi: '🔶' };
+const BRAND_ICONS: Record<string, string> = {
+  Apple: '/icons/tradein/brand-apple.svg',
+  Samsung: '/icons/tradein/brand-samsung.svg',
+  Xiaomi: '/icons/tradein/brand-xiaomi.svg',
+};
 
 function StepBrand({
   brands,
@@ -393,13 +397,24 @@ function StepBrand({
             aria-pressed={selected === b}
             onClick={() => onSelect(b)}
             className={cn(
-              'flex items-center gap-3 px-5 py-4 rounded-2xl border-2 text-left text-base font-medium transition-all',
+              'group flex flex-col items-center gap-2 p-5 rounded-2xl border-2 text-base font-medium transition-all hover:scale-[1.03] hover:-translate-y-0.5',
               selected === b
-                ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/8 text-[var(--color-accent)]'
-                : 'border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent)]/50',
+                ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/8 text-[var(--color-accent)] shadow-[0_8px_24px_rgba(0,113,227,0.15)]'
+                : 'border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent)]/50 text-[var(--color-text)]',
             )}
           >
-            <span className="text-2xl">{BRAND_ICONS[b] ?? '📱'}</span>
+            <span
+              className="block w-14 h-14 transition-transform duration-300 group-hover:scale-110"
+              style={{ color: selected === b ? 'var(--color-accent)' : '#1d1d1f' }}
+              aria-hidden
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={BRAND_ICONS[b] ?? '/icons/tradein/brand-samsung.svg'}
+                alt=""
+                className="w-full h-full"
+              />
+            </span>
             <span>{b}</span>
           </button>
         ))}
@@ -680,6 +695,7 @@ function StepWideOptions({
   onSelect,
   onBack,
   onNext,
+  iconBase,
 }: {
   title: string;
   hint: string;
@@ -688,45 +704,58 @@ function StepWideOptions({
   onSelect: (id: string) => void;
   onBack: () => void;
   onNext: () => void;
+  /** Префикс пути к SVG-иконке: `/icons/tradein/screen` → `screen-{id}.svg`. */
+  iconBase?: string;
 }) {
   return (
     <div>
       <StepHeader title={title} hint={hint} />
       <div className="space-y-2">
-        {options.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            role="radio"
-            aria-checked={selected === o.id}
-            aria-label={o.title}
-            onClick={() => onSelect(o.id)}
-            className={cn(
-              'w-full flex items-start gap-4 px-4 py-4 rounded-2xl border-2 text-left transition-all',
-              selected === o.id
-                ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/5'
-                : 'border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent)]/40',
-            )}
-          >
-            <span
+        {options.map((o) => {
+          const active = selected === o.id;
+          return (
+            <button
+              key={o.id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              aria-label={o.title}
+              onClick={() => onSelect(o.id)}
               className={cn(
-                'mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
-                selected === o.id
-                  ? 'border-[var(--color-accent)] bg-[var(--color-accent)]'
-                  : 'border-[var(--color-border)]',
+                'group w-full flex items-center gap-4 px-4 py-4 rounded-2xl border-2 text-left transition-all hover:scale-[1.01]',
+                active
+                  ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/5 shadow-[0_8px_24px_rgba(0,113,227,0.10)]'
+                  : 'border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent)]/40',
               )}
-              aria-hidden="true"
             >
-              {selected === o.id && (
-                <span className="w-2 h-2 rounded-full bg-white" />
+              {iconBase && (
+                <span
+                  className="flex-shrink-0 w-12 h-12 transition-transform duration-300 group-hover:scale-110"
+                  style={{ color: active ? 'var(--color-accent)' : '#1d1d1f' }}
+                  aria-hidden
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`${iconBase}-${o.id}.svg`} alt="" className="w-full h-full" />
+                </span>
               )}
-            </span>
-            <div>
-              <div className="font-medium text-base">{o.title}</div>
-              <div className="text-sm text-[var(--color-text-secondary)] mt-0.5">{o.desc}</div>
-            </div>
-          </button>
-        ))}
+              <span
+                className={cn(
+                  'mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
+                  active
+                    ? 'border-[var(--color-accent)] bg-[var(--color-accent)]'
+                    : 'border-[var(--color-border)]',
+                )}
+                aria-hidden="true"
+              >
+                {active && <span className="w-2 h-2 rounded-full bg-white" />}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-base">{o.title}</div>
+                <div className="text-sm text-[var(--color-text-secondary)] mt-0.5">{o.desc}</div>
+              </div>
+            </button>
+          );
+        })}
       </div>
       <NavBar onBack={onBack} onNext={onNext} nextDisabled={!selected} />
     </div>
@@ -879,12 +908,24 @@ function StepCompleteness({
               aria-label={item.label}
               onClick={() => onToggle(item.id)}
               className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left text-sm font-medium transition-all',
+                'group flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left text-sm font-medium transition-all hover:scale-[1.02]',
                 isChecked
                   ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/8 text-[var(--color-accent)]'
                   : 'border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent)]/40',
               )}
             >
+              <span
+                className="flex-shrink-0 w-9 h-9 transition-transform duration-300 group-hover:scale-110"
+                style={{ color: isChecked ? 'var(--color-accent)' : '#1d1d1f' }}
+                aria-hidden
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/icons/tradein/comp-${item.id}.svg`}
+                  alt=""
+                  className="w-full h-full"
+                />
+              </span>
               <span
                 className={cn(
                   'w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all',
@@ -1421,6 +1462,7 @@ export function TradeinWizard({ initialPrices }: TradeinWizardProps) {
             onSelect={(id) => dispatch({ type: 'SET_SCREEN', screen: id })}
             onBack={goBack}
             onNext={goNext}
+            iconBase="/icons/tradein/screen"
           />
         );
 
@@ -1434,6 +1476,7 @@ export function TradeinWizard({ initialPrices }: TradeinWizardProps) {
             onSelect={(id) => dispatch({ type: 'SET_BODY', body: id })}
             onBack={goBack}
             onNext={goNext}
+            iconBase="/icons/tradein/body"
           />
         );
 
