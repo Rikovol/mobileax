@@ -63,8 +63,10 @@ export async function buildProductMetadata(
   const product = await loadProduct(apiSlug);
   if (!product) return { title: 'Товар не найден' };
 
+  // Если condition mismatch — компонент сделает HTTP redirect, body не дойдёт до клиента.
+  // Возвращаем пустой metadata; canonical в этом случае бесполезен.
   if (expectedCondition && product.condition !== expectedCondition) {
-    return { alternates: { canonical: SITE_URL + canonicalPath(product, apiSlug) } };
+    return {};
   }
 
   const name = [product.brand, product.model, product.storage, product.color]

@@ -81,9 +81,12 @@ export function humanSlug(parts: {
     m = m.replace(re, '');
   }
   m = m.replace(/\s*\([^)]+\)/g, '').trim();
-  return slugify(
+  const result = slugify(
     [m, parts.storage, parts.color, parts.simType].filter(Boolean).join(' '),
   );
+  // Fallback чтобы не получить URL вида `/new/apple/iphone/~~slug` —
+  // когда model='(2025)' или после strip-brand остаётся пусто.
+  return result || 'product';
 }
 
 function escapeRegex(s: string): string {

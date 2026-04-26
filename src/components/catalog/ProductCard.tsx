@@ -48,9 +48,11 @@ function BatteryBadge({ value }: { value: string }) {
 
   return (
     <div
+      role="img"
+      aria-label={`Состояние батареи: ${pct}%`}
+      title={`Состояние батареи: ${pct}%`}
       className="mt-1.5 inline-flex items-center gap-1.5 self-start rounded-full pl-1.5 pr-2.5 py-1 text-[11px] font-medium leading-none"
       style={{ background: bg, color: fg }}
-      title={`Состояние батареи: ${pct}%`}
     >
       <span
         aria-hidden

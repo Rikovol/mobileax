@@ -151,17 +151,20 @@ export default function HeroSlider() {
       <div className="section-container py-3 md:py-5">
         {/* Top headline */}
         <div className="mb-4 md:mb-5">
+          {/* На широких экранах — одна строка во всю ширину контейнера.
+              На мобильных — заголовок и подзаголовок переносятся на 2 строки. */}
           <h1
-            className="font-semibold tracking-tight whitespace-nowrap overflow-hidden text-ellipsis"
+            className="font-semibold tracking-tight"
             style={{
               fontSize: 'clamp(1.25rem, 2.4vw, 1.75rem)',
               letterSpacing: '-0.025em',
               color: '#1d1d1f',
-              lineHeight: 1.15,
+              lineHeight: 1.2,
             }}
           >
-            Лучшее уже здесь.{' '}
+            <span className="block md:inline">Лучшее уже здесь.</span>{' '}
             <span
+              className="block md:inline mt-1 md:mt-0"
               style={{
                 color: '#86868b',
                 fontSize: 'clamp(0.8125rem, 1.2vw, 1rem)',
