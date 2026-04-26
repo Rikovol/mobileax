@@ -236,10 +236,11 @@ function CardSliderInner({ card, big = false }: { card: HeroCard; big?: boolean 
 function CardWrapper({ card, big = false }: { card: HeroCard; big?: boolean }) {
   return (
     <div
-      className="relative rounded-3xl overflow-hidden flex-1 min-w-0"
+      className="relative rounded-3xl overflow-hidden flex-shrink-0 w-[min(78vw,320px)] md:w-auto md:flex-1 md:min-w-0"
       style={{
         minHeight: big ? 460 : 340,
         background: card.slides[0].bg,
+        scrollSnapAlign: 'start',
       }}
     >
       <CardSliderInner card={card} big={big} />
@@ -250,8 +251,16 @@ function CardWrapper({ card, big = false }: { card: HeroCard; big?: boolean }) {
 export default function HeroSlider() {
   return (
     <section aria-label="Витрина" style={{ background: 'var(--color-bg)' }}>
-      <div className="section-container py-8 md:py-12">
-        <div className="rf-cards-scroller-platter flex gap-4">
+      <div className="py-8 md:py-12">
+        <div
+          className="rf-cards-scroller-platter flex gap-4 overflow-x-auto md:overflow-x-visible no-scrollbar"
+          style={{
+            scrollSnapType: 'x mandatory',
+            paddingLeft: 'max(20px, calc((100% - 1200px) / 2 + 20px))',
+            paddingRight: 'max(20px, calc((100% - 1200px) / 2 + 20px))',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
           {CARDS.map((card) => (
             <CardWrapper key={card.id} card={card} />
           ))}
