@@ -8,7 +8,24 @@ const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID || '';
 const RATE_LIMIT_MS = 60_000;
 const STORAGE_KEY = 'mobileax_msg_last_sent_at';
 
+/** Глобальный CustomEvent для открытия виджета с предзаполненными полями.
+ *  Источник: кнопка «Купить» в карточке товара, любые другие триггеры.
+ *  detail: { messageType?, subject?, body? } — все поля опциональны. */
+export const MESSAGE_WIDGET_OPEN_EVENT = 'mobileax:open-message';
+export interface OpenMessageDetail {
+  messageType?: 'contact' | 'order' | 'feedback';
+  subject?: string;
+  body?: string;
+}
+
+export function openMessageWidget(detail: OpenMessageDetail = {}) {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(MESSAGE_WIDGET_OPEN_EVENT, { detail }));
+  }
+}
+
 type SubmitState = 'idle' | 'loading' | 'success' | 'error';
+type MessageType = 'contact' | 'order' | 'feedback';
 
 /**
  * Плавающая кнопка «Сообщения» — снизу справа на всех страницах.
@@ -27,11 +44,28 @@ export default function MessageWidget() {
   const [email, setEmail] = useState('');
   const [body, setBody] = useState('');
   const [honey, setHoney] = useState(''); // hidden honeypot, должно быть пусто
+  const [messageType, setMessageType] = useState<MessageType>('contact');
+  const [subject, setSubject] = useState<string>('');
   const openedAtRef = useRef<number>(0);
 
   useEffect(() => {
     if (open) openedAtRef.current = Date.now();
   }, [open]);
+
+  // Подписываемся на CustomEvent от других компонентов (кнопка «Купить» и т.п.)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<OpenMessageDetail>).detail || {};
+      setMessageType(detail.messageType || 'contact');
+      setSubject(detail.subject || '');
+      if (detail.body) setBody(detail.body);
+      setSubmitState('idle');
+      setErrorMsg('');
+      setOpen(true);
+    };
+    window.addEventListener(MESSAGE_WIDGET_OPEN_EVENT, handler);
+    return () => window.removeEventListener(MESSAGE_WIDGET_OPEN_EVENT, handler);
+  }, []);
 
   // ESC закрывает модалку
   useEffect(() => {
@@ -65,6 +99,8 @@ export default function MessageWidget() {
     setEmail('');
     setBody('');
     setHoney('');
+    setMessageType('contact');
+    setSubject('');
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -101,11 +137,11 @@ export default function MessageWidget() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message_type: 'contact',
+          message_type: messageType,
           contact_name: name.trim(),
           contact_phone: phone.trim(),
           contact_email: email.trim() || undefined,
-          subject: 'Сообщение с сайта',
+          subject: subject || (messageType === 'order' ? 'Заказ с сайта' : 'Сообщение с сайта'),
           body: body.trim(),
           website: honey,
           time_to_submit_ms: Math.max(0, Date.now() - openedAtRef.current),
@@ -180,7 +216,7 @@ export default function MessageWidget() {
                 className="font-semibold tracking-tight"
                 style={{ fontSize: 17, color: 'var(--color-text)' }}
               >
-                Связаться с нами
+                {messageType === 'order' ? 'Оформить заказ' : 'Связаться с нами'}
               </h2>
               <button
                 type="button"
@@ -213,6 +249,18 @@ export default function MessageWidget() {
                 className="p-5 space-y-3 overflow-y-auto"
                 style={{ flex: 1 }}
               >
+                {messageType === 'order' && subject && (
+                  <div
+                    className="rounded-lg p-3 text-sm flex items-center gap-2"
+                    style={{
+                      background: 'rgba(0, 113, 227, 0.08)',
+                      color: 'var(--color-accent)',
+                    }}
+                  >
+                    <span>🛒</span>
+                    <span className="font-medium">{subject}</span>
+                  </div>
+                )}
                 <div>
                   <label className="block text-[13px] font-medium mb-1" style={{ color: 'var(--color-text)' }}>
                     Имя <span style={{ color: 'var(--color-accent)' }}>*</span>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { fetchProduct } from '@/lib/phonebase-client';
 import { formatPrice, formatSimType } from '@/lib/utils';
 import ProductGallery from '@/components/product/ProductGallery';
+import BuyButton from '@/components/product/BuyButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -246,7 +247,10 @@ export default async function ProductPage({ params }: Props) {
 
             {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mt-4">
-              <button className="btn-accent flex-1">Купить</button>
+              <BuyButton
+                productLabel={name}
+                priceLabel={formatPrice(product.price_effective)}
+              />
               <Link
                 href={`/trade-in?model=${encodeURIComponent(name)}`}
                 className="flex-1 inline-flex items-center justify-center px-6 py-3 rounded-full font-medium text-[1.0625rem] text-[var(--color-accent)] border border-[var(--color-accent)] transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-white"
