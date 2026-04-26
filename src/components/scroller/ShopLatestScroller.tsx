@@ -20,6 +20,17 @@ interface ScrollerCard {
 const CARDS: ScrollerCard[] = [
   {
     id: 0,
+    eyebrow: 'Выгода',
+    title: 'Trade-In',
+    subtitle: 'Сдай старое — получи скидку',
+    cta: 'Оценить',
+    ctaHref: '/trade-in',
+    imgSrc: '/themes/mobileax/heroes/iphone-17-pro.png',
+    imgAlt: 'Trade-In',
+    bg: '#0a2a4a',
+  },
+  {
+    id: 1,
     eyebrow: 'Новинка',
     title: 'iPhone 17 Pro',
     subtitle: 'Самый продвинутый iPhone',
@@ -30,7 +41,7 @@ const CARDS: ScrollerCard[] = [
     bg: '#000000',
   },
   {
-    id: 1,
+    id: 2,
     eyebrow: 'Доступно',
     title: 'iPhone 17e',
     subtitle: 'Та же мощь, проще цена',
@@ -41,7 +52,7 @@ const CARDS: ScrollerCard[] = [
     bg: '#1d1d1f',
   },
   {
-    id: 2,
+    id: 3,
     eyebrow: 'Производительность',
     title: 'MacBook',
     subtitle: 'Лёгкий и мощный',
@@ -52,7 +63,7 @@ const CARDS: ScrollerCard[] = [
     bg: '#1d1d1f',
   },
   {
-    id: 3,
+    id: 4,
     eyebrow: 'Звук',
     title: 'AirPods Max',
     subtitle: 'Активное шумоподавление',
@@ -62,17 +73,6 @@ const CARDS: ScrollerCard[] = [
     imgAlt: 'AirPods Max',
     bg: '#fbfbfd',
     textDark: true,
-  },
-  {
-    id: 4,
-    eyebrow: 'Выгода',
-    title: 'Trade-In',
-    subtitle: 'Сдай старое — получи скидку',
-    cta: 'Оценить',
-    ctaHref: '/trade-in',
-    imgSrc: '/themes/mobileax/heroes/iphone-17-pro.png',
-    imgAlt: 'Trade-In',
-    bg: '#0a2a4a',
   },
 ];
 
