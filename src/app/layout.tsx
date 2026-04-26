@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { getActiveTheme } from '@/lib/theme-resolver';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import MessageWidget from '@/components/messages/MessageWidget';
 import './globals.css';
 
 const inter = Inter({
@@ -39,6 +40,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
+        <MessageWidget />
       </body>
     </html>
   );
