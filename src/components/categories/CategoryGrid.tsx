@@ -143,7 +143,7 @@ export default function CategoryGrid() {
                     key={cat.slug}
                     href={categoryUrl(cat)}
                     data-category-card
-                    className="group relative flex flex-col flex-shrink-0 transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.08]"
+                    className="group relative flex flex-col flex-shrink-0 transition-transform duration-500 ease-out hover:-translate-y-1.5 hover:z-10"
                     style={{
                       width: 'clamp(110px, 28vw, 140px)',
                       height: 170,
@@ -152,14 +152,17 @@ export default function CategoryGrid() {
                     }}
                     aria-label={cat.label}
                   >
-                    {/* Label — top */}
-                    <div className="relative z-10 pt-1">
+                    {/* Label — top, white-space:nowrap чтобы не переносился */}
+                    <div className="relative z-10 pt-1 px-1">
                       <h3
                         className="font-semibold leading-tight tracking-tight text-center"
                         style={{
                           fontSize: '0.875rem',
                           letterSpacing: '-0.02em',
                           color: '#1d1d1f',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
                         }}
                       >
                         {cat.label}
