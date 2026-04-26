@@ -63,18 +63,31 @@ export default function Header() {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center flex-1">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href + link.label}
-                href={link.href}
-                className="text-[13px] px-3.5 leading-[56px] transition-colors hover:opacity-100"
-                style={{ color: '#424245' }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = '#1d1d1f')}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = '#424245')}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              if (link.href === '/trade-in') {
+                return (
+                  <Link
+                    key={link.href + link.label}
+                    href={link.href}
+                    className="nav-trade-in text-[13px]"
+                  >
+                    {link.label}
+                  </Link>
+                );
+              }
+              return (
+                <Link
+                  key={link.href + link.label}
+                  href={link.href}
+                  className="text-[13px] px-3.5 leading-[56px] transition-colors hover:opacity-100"
+                  style={{ color: '#424245' }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = '#1d1d1f')}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = '#424245')}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right side */}
@@ -146,17 +159,23 @@ export default function Header() {
         </button>
 
         <div className="flex flex-col">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href + link.label}
-              href={link.href}
-              className="py-3.5 text-[17px] border-b"
-              style={{ color: '#f5f5f7', borderColor: '#2c2c2e' }}
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isTradeIn = link.href === '/trade-in';
+            return (
+              <Link
+                key={link.href + link.label}
+                href={link.href}
+                className={`py-3.5 text-[17px] border-b ${isTradeIn ? 'nav-trade-in-mobile' : ''}`}
+                style={{
+                  color: isTradeIn ? undefined : '#f5f5f7',
+                  borderColor: '#2c2c2e',
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <Link
             href="tel:+79300632370"
             className="mt-6 text-[15px] font-semibold"

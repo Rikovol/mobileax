@@ -196,7 +196,7 @@ export default function HeroSlider() {
                 className="group relative flex flex-col rounded-3xl overflow-hidden transition-transform duration-300 hover:scale-[1.005]"
                 style={{
                   background: cardBg,
-                  minHeight: 540,
+                  minHeight: 600,
                   textDecoration: 'none',
                 }}
                 aria-label={p.eyebrow}
@@ -245,11 +245,11 @@ export default function HeroSlider() {
                   </div>
                 </div>
 
-                {/* Image — увеличенная зона; внешний scale + inner hover scale */}
+                {/* Image — крупный hero; внешний scale + inner hover scale */}
                 <div
-                  className="relative flex-1 mt-2 min-h-[320px] z-[1]"
+                  className="relative flex-1 mt-1 min-h-[380px] z-[1]"
                   style={{
-                    transform: 'scale(1.18)',
+                    transform: 'scale(1.45)',
                     transformOrigin: 'bottom center',
                   }}
                 >
@@ -258,7 +258,7 @@ export default function HeroSlider() {
                     alt={p.imgAlt}
                     fill
                     className="object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.04]"
-                    sizes="(max-width: 768px) 110vw, 55vw"
+                    sizes="(max-width: 768px) 130vw, 70vw"
                     priority
                   />
                 </div>

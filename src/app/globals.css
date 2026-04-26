@@ -165,3 +165,54 @@ html {
 .catalog-toolbar button {
   will-change: transform, background-color;
 }
+
+/* === Trade-In — неоновая pill-кнопка в navigation === */
+.nav-trade-in {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 14px;
+  margin: 0 6px;
+  border-radius: 9999px;
+  color: #00e5ff !important;
+  border: 1.5px solid #00e5ff;
+  background: rgba(0, 229, 255, 0.06);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  align-self: center;
+  transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+  animation: neon-pulse 2.4s ease-in-out infinite;
+}
+
+.nav-trade-in:hover {
+  color: #ffffff !important;
+  background: rgba(0, 229, 255, 0.18);
+  transform: scale(1.05);
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 6px rgba(0, 229, 255, 0.55),
+      0 0 14px rgba(0, 229, 255, 0.30),
+      inset 0 0 6px rgba(0, 229, 255, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 0 12px rgba(0, 229, 255, 0.85),
+      0 0 24px rgba(0, 229, 255, 0.50),
+      inset 0 0 9px rgba(0, 229, 255, 0.28);
+  }
+}
+
+/* На мобильном drawer — без pill-формы (она ломает list flow), только cyan glow на тексте */
+.nav-trade-in-mobile {
+  color: #00e5ff !important;
+  text-shadow:
+    0 0 6px rgba(0, 229, 255, 0.55),
+    0 0 14px rgba(0, 229, 255, 0.30);
+  font-weight: 600;
+}
