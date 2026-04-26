@@ -59,9 +59,10 @@ export default function Header() {
             <Image
               src="/themes/mobileax/logo.png"
               alt={theme.name}
-              width={156}
-              height={43}
+              width={184}
+              height={50}
               priority
+              style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.18))' }}
             />
           </Link>
 

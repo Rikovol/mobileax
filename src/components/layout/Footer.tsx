@@ -86,8 +86,9 @@ export default function Footer() {
               <img
                 src="/themes/mobileax/logo.png"
                 alt={theme.name}
-                width={170}
-                height={47}
+                width={200}
+                height={55}
+                style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.18))' }}
               />
             </Link>
             <p className="text-[13px] leading-relaxed mb-3" style={{ color: 'var(--color-text-secondary)' }}>
