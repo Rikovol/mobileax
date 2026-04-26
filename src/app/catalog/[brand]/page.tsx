@@ -5,7 +5,7 @@ import { fetchCatalog } from '@/lib/phonebase-client';
 import ProductCard from '@/components/catalog/ProductCard';
 import CatalogFilters from '@/components/catalog/CatalogFilters';
 import CatalogSubNav from '@/components/catalog/CatalogSubNav';
-import { getCategory, getLine, getCategoriesByBrand } from '@/lib/taxonomy';
+import { getCategory, getLine, getCategoriesByBrand, categoryUrl } from '@/lib/taxonomy';
 
 export const dynamic = 'force-dynamic';
 
@@ -109,15 +109,17 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
       </h1>
       <p className="hero-subtitle mb-10">Официальная гарантия · Trade-in · Рассрочка</p>
 
-      {/* Категория chips: отдельные категории для текущего brand (для Samsung — Galaxy S, Galaxy A, Galaxy Watch) */}
+      {/* Категория chips: отдельные категории для текущего brand. Категории с customHref
+          (например used → /used) ведут на собственную страницу, не на catalog. */}
       {brandsForBrand.length > 1 && (
         <nav aria-label="Категории" className="mb-6 flex gap-2 flex-wrap">
           {brandsForBrand.map((cat) => {
             const active = cat.slug === categorySlug;
+            const href = cat.customHref ?? categoryUrl(cat);
             return (
               <Link
                 key={cat.slug}
-                href={`/catalog/${encodeURIComponent(cat.brand)}?category=${cat.slug}&condition=${condition}`}
+                href={href}
                 className="px-4 py-2 rounded-full text-[14px] font-medium transition-colors"
                 style={{
                   background: active ? '#1d1d1f' : 'rgba(0,0,0,0.05)',
