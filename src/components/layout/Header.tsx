@@ -9,14 +9,15 @@ import { getActiveTheme } from '@/lib/theme-resolver';
 const theme = getActiveTheme();
 
 const NAV_LINKS = [
-  { label: 'iPhone', href: '/catalog/Apple' },
-  { label: 'Samsung', href: '/catalog/Samsung' },
-  { label: 'MacBook', href: '/catalog/Apple' },
-  { label: 'Apple Watch', href: '/catalog/Apple' },
-  { label: 'AirPods', href: '/catalog/Apple' },
+  { label: 'iPhone', href: '/catalog/Apple?category=iphone' },
+  { label: 'Mac', href: '/catalog/Apple?category=mac' },
+  { label: 'iPad', href: '/catalog/Apple?category=ipad' },
+  { label: 'Watch', href: '/catalog/Apple?category=watch' },
+  { label: 'AirPods', href: '/catalog/Apple?category=airpods' },
+  { label: 'Galaxy S', href: '/catalog/Samsung?category=galaxy-s' },
+  { label: 'Galaxy A', href: '/catalog/Samsung?category=galaxy-a' },
   { label: 'Trade-In', href: '/trade-in' },
   { label: 'Б/У', href: '/used' },
-  { label: 'Контакты', href: '/contacts' },
 ];
 
 export default function Header() {

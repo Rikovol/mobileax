@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { fetchCatalog, fetchCategories } from '@/lib/phonebase-client';
+import { fetchCatalog } from '@/lib/phonebase-client';
 import ProductCard from '@/components/catalog/ProductCard';
 import CatalogFilters from '@/components/catalog/CatalogFilters';
+import CatalogSubNav from '@/components/catalog/CatalogSubNav';
+import { getCategory, getLine, getCategoriesByBrand } from '@/lib/taxonomy';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,23 +47,33 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
   const page = Math.max(1, Number(sp(sq, 'page')) || 1);
   const sort = (sp(sq, 'sort') as 'price_asc' | 'price_desc' | 'newest') || 'newest';
   const storage = sp(sq, 'storage') || undefined;
-  const color = sp(sq, 'color') || undefined;
+  const categorySlug = sp(sq, 'category') || undefined;
+  const lineSlug = sp(sq, 'line') || undefined;
+
+  // Resolve taxonomy: чем фильтровать через `search` параметр phonebase
+  const taxonomyCategory = categorySlug ? getCategory(categorySlug) : undefined;
+  const taxonomyLine =
+    taxonomyCategory && lineSlug ? getLine(taxonomyCategory, lineSlug) : undefined;
+
+  // Приоритет search-запроса: line > storage (если оба заданы — line побеждает)
+  const searchQuery = taxonomyLine?.searchQuery
+    ?? taxonomyCategory?.lines.map((l) => l.searchQuery)[0] // fallback: первая линейка категории если line не выбран
+    ?? storage;
+
+  // brand из URL имеет приоритет; если в taxonomy выбрана категория, она должна совпасть.
+  const effectiveBrand = taxonomyCategory?.brand ?? brandName;
+  const brandsForBrand = getCategoriesByBrand(effectiveBrand);
 
   let catalog = null;
-  let categories: { value: string; label: string; count: number }[] = [];
-
   try {
-    [catalog, categories] = await Promise.all([
-      fetchCatalog({
-        condition,
-        brand: brandName,
-        page,
-        per_page: 24,
-        sort,
-        ...(storage ? { search: storage } : {}),
-      }),
-      fetchCategories(),
-    ]);
+    catalog = await fetchCatalog({
+      condition,
+      brand: effectiveBrand,
+      page,
+      per_page: 24,
+      sort,
+      ...(searchQuery ? { search: searchQuery } : {}),
+    });
   } catch {
     // API not yet connected — show fallback
   }
@@ -92,59 +104,68 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
       </nav>
 
       {/* Page heading */}
-      <h1 className="hero-title mb-3">{brandName}</h1>
+      <h1 className="hero-title mb-3">
+        {taxonomyLine?.label ?? taxonomyCategory?.label ?? brandName}
+      </h1>
       <p className="hero-subtitle mb-10">Официальная гарантия · Trade-in · Рассрочка</p>
+
+      {/* Категория chips: отдельные категории для текущего brand (для Samsung — Galaxy S, Galaxy A, Galaxy Watch) */}
+      {brandsForBrand.length > 1 && (
+        <nav aria-label="Категории" className="mb-6 flex gap-2 flex-wrap">
+          {brandsForBrand.map((cat) => {
+            const active = cat.slug === categorySlug;
+            return (
+              <Link
+                key={cat.slug}
+                href={`/catalog/${encodeURIComponent(cat.brand)}?category=${cat.slug}&condition=${condition}`}
+                className="px-4 py-2 rounded-full text-[14px] font-medium transition-colors"
+                style={{
+                  background: active ? '#1d1d1f' : 'rgba(0,0,0,0.05)',
+                  color: active ? '#fff' : '#1d1d1f',
+                }}
+              >
+                {cat.label}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+
+      {/* Линейки внутри выбранной категории (для iPhone — 17/17 Pro/Air/16/15/etc.) */}
+      {taxonomyCategory && (
+        <CatalogSubNav
+          category={taxonomyCategory}
+          brand={effectiveBrand}
+          activeLineSlug={lineSlug}
+        />
+      )}
 
       {/* Condition switch */}
       <div className="flex gap-2 mb-8">
-        {(['new', 'used'] as const).map((cond) => (
-          <Link
-            key={cond}
-            href={`/catalog/${brand}?condition=${cond}`}
-            className={[
-              'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
-              condition === cond
-                ? 'bg-[var(--color-accent)] text-white'
-                : 'bg-[var(--color-bg-secondary)] text-[var(--color-text)] hover:bg-[var(--color-border)]',
-            ].join(' ')}
-          >
-            {cond === 'new' ? 'Новые' : 'Б/у'}
-          </Link>
-        ))}
+        {(['new', 'used'] as const).map((cond) => {
+          const params = new URLSearchParams();
+          params.set('condition', cond);
+          if (categorySlug) params.set('category', categorySlug);
+          if (lineSlug) params.set('line', lineSlug);
+          return (
+            <Link
+              key={cond}
+              href={`/catalog/${brand}?${params.toString()}`}
+              className={[
+                'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
+                condition === cond
+                  ? 'bg-[var(--color-accent)] text-white'
+                  : 'bg-[var(--color-bg-secondary)] text-[var(--color-text)] hover:bg-[var(--color-border)]',
+              ].join(' ')}
+            >
+              {cond === 'new' ? 'Новые' : 'Б/у'}
+            </Link>
+          );
+        })}
       </div>
 
       <div className="flex gap-10">
-        {/* Sidebar — categories, sticky */}
-        {categories.length > 0 && (
-          <aside className="hidden lg:block w-52 shrink-0">
-            <div className="sticky top-28">
-              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)] mb-4">
-                Категории
-              </p>
-              <ul className="space-y-1">
-                {categories.map((cat) => (
-                  <li key={cat.value}>
-                    <Link
-                      href={`/catalog/${brand}?condition=${condition}&category=${encodeURIComponent(cat.value)}`}
-                      className="flex justify-between items-center px-3 py-2 rounded-lg text-sm hover:bg-[var(--color-bg-secondary)] transition-colors group"
-                    >
-                      <span className="group-hover:text-[var(--color-accent)] transition-colors">
-                        {cat.label}
-                      </span>
-                      {cat.count > 0 && (
-                        <span className="text-xs text-[var(--color-text-secondary)]">
-                          {cat.count}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
-        )}
-
-        {/* Main content */}
+        {/* Main content (sidebar заменён на верхние chips через CatalogSubNav) */}
         <div className="flex-1 min-w-0">
           {/* Filters row */}
           <div className="mb-6">

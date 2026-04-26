@@ -32,7 +32,7 @@ const CARDS: HeroCard[] = [
         title: 'iPhone 17 Pro',
         subtitle: 'Камера. Производительность. Титан.',
         ctaLabel: 'Купить',
-        ctaHref: '/catalog/Apple?category=iphone',
+        ctaHref: '/catalog/Apple?category=iphone&line=17-pro',
         imgSrc: '/themes/mobileax/heroes/iphone-17-pro.jpg',
         imgAlt: 'iPhone 17 Pro',
         bg: '#000000',
