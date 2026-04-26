@@ -1048,7 +1048,7 @@ function StepResult({
           condition: JSON.stringify(issuesForPayload),
           battery_pct: isIPhone ? state.battery : undefined,
           completeness: completenessLabels,
-          estimated_price: Math.round((result.low + result.high) / 2),
+          estimated_price: Math.round(result.high),
         },
         website: '',
         time_to_submit_ms: elapsed,
@@ -1100,7 +1100,7 @@ function StepResult({
           Ориентировочная стоимость выкупа
         </div>
         <div className="text-3xl font-bold tracking-tight text-[var(--color-text)] mb-1">
-          {fmtPrice(result.low)} – {fmtPrice(result.high)}
+          до {fmtPrice(result.high)}
         </div>
         <div className="text-sm text-[var(--color-text-secondary)]">
           Состояние: {COND_LABELS[result.condition]}
