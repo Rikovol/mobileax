@@ -84,7 +84,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-4" aria-label={theme.name}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/themes/mobileax/logo-f.svg"
+                src="/themes/mobileax/logo.png"
                 alt={theme.name}
                 width={140}
                 height={38}

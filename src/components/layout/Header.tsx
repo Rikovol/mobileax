@@ -53,7 +53,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0 mr-8" aria-label={theme.name}>
             <Image
-              src="/themes/mobileax/logo.svg"
+              src="/themes/mobileax/logo.png"
               alt={theme.name}
               width={132}
               height={36}
