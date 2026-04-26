@@ -107,7 +107,7 @@ export const CATEGORIES: Category[] = [
     slug: 'samsung',
     brand: 'Samsung',
     label: 'Samsung',
-    icon: '/themes/mobileax/heroes/iphone-17e.jpg', // TODO заменить на Samsung Galaxy S26 PNG
+    icon: '/themes/mobileax/categories/samsung.png',
     lines: [
       { slug: 's26-ultra', label: 'Galaxy S26 Ultra', searchQuery: 'Galaxy S26 Ultra' },
       { slug: 's26-plus', label: 'Galaxy S26+', searchQuery: 'Galaxy S26+' },

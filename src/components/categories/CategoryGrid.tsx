@@ -136,10 +136,10 @@ export default function CategoryGrid() {
                     key={cat.slug}
                     href={categoryUrl(cat)}
                     data-category-card
-                    className="group relative flex flex-col flex-shrink-0 transition-transform duration-300 hover:scale-[1.04]"
+                    className="group relative flex flex-col flex-shrink-0 transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.08]"
                     style={{
-                      width: 'clamp(130px, 32vw, 170px)',
-                      height: 200,
+                      width: 'clamp(110px, 28vw, 140px)',
+                      height: 170,
                       scrollSnapAlign: 'start',
                       textDecoration: 'none',
                     }}
@@ -150,7 +150,7 @@ export default function CategoryGrid() {
                       <h3
                         className="font-semibold leading-tight tracking-tight text-center"
                         style={{
-                          fontSize: '0.9375rem',
+                          fontSize: '0.875rem',
                           letterSpacing: '-0.02em',
                           color: '#1d1d1f',
                         }}
@@ -159,14 +159,14 @@ export default function CategoryGrid() {
                       </h3>
                     </div>
 
-                    {/* Image — без card background, fills остальное */}
-                    <div className="relative flex-1 mt-2">
+                    {/* Image — без card background, парение */}
+                    <div className="relative flex-1 mt-1.5">
                       <Image
                         src={cat.icon}
                         alt={cat.label}
                         fill
-                        className="object-contain transition-transform duration-500 group-hover:scale-[1.04]"
-                        sizes="170px"
+                        className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.12]"
+                        sizes="140px"
                       />
                     </div>
                   </Link>
