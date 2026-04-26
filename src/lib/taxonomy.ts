@@ -25,6 +25,10 @@ export interface Category {
   lines: CategoryLine[];
   /** Кастомная ссылка (если задана — игнорирует brand-based URL). */
   customHref?: string;
+  /** search-фильтр для всей категории, когда линия не выбрана.
+   *  Используется в /catalog/[brand]?category=X (без line) — иначе brand даёт всё подряд
+   *  (iPhone, MacBook, iPad смешанно). Для категорий-«всё» (used) — пусто. */
+  searchQuery?: string;
 }
 
 export const CATEGORIES: Category[] = [
@@ -41,6 +45,7 @@ export const CATEGORIES: Category[] = [
     brand: 'Apple',
     label: 'iPhone',
     icon: '/themes/mobileax/categories/iphone.png',
+    searchQuery: 'iPhone',
     lines: [
       { slug: '17', label: 'iPhone 17', searchQuery: 'iPhone 17 ' }, // включает и 17e (search префиксный)
       { slug: '17-pro', label: 'iPhone 17 Pro', searchQuery: 'iPhone 17 Pro' },
@@ -56,6 +61,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: 'mac',
+    searchQuery: 'Mac',
     brand: 'Apple',
     label: 'Mac',
     icon: '/themes/mobileax/categories/mac.png',
@@ -70,6 +76,7 @@ export const CATEGORIES: Category[] = [
   {
     slug: 'ipad',
     brand: 'Apple',
+    searchQuery: 'iPad',
     label: 'iPad',
     icon: '/themes/mobileax/categories/ipad.png',
     lines: [
@@ -81,6 +88,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: 'watch',
+    searchQuery: 'Watch',
     brand: 'Apple',
     label: 'Apple Watch',
     icon: '/themes/mobileax/categories/watch.png',
@@ -93,6 +101,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: 'airpods',
+    searchQuery: 'AirPods',
     brand: 'Apple',
     label: 'AirPods',
     icon: '/themes/mobileax/categories/airpods.png',
@@ -105,6 +114,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: 'samsung',
+    searchQuery: 'Galaxy',
     brand: 'Samsung',
     label: 'Samsung',
     icon: '/themes/mobileax/categories/samsung.png',

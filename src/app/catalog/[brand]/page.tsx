@@ -58,7 +58,10 @@ export default async function BrandCatalogPage({ params, searchParams }: Props) 
     taxonomyCategory && lineSlug ? getLine(taxonomyCategory, lineSlug) : undefined;
 
   // Приоритет search-запроса: line > storage. Без линейки — без search (показать всю категорию)
-  const searchQuery = taxonomyLine?.searchQuery ?? storage;
+  // Приоритет: line > category > storage. Без searchQuery brand-фильтр даёт всё подряд
+  // (iPhone + Mac + iPad смешано), поэтому категория должна сузить до своего семейства.
+  const searchQuery =
+    taxonomyLine?.searchQuery ?? taxonomyCategory?.searchQuery ?? storage;
 
   // brand из URL имеет приоритет; если в taxonomy выбрана категория, она должна совпасть.
   const effectiveBrand = taxonomyCategory?.brand ?? brandName;
