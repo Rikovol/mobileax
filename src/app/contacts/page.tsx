@@ -110,43 +110,77 @@ export default function ContactsPage() {
           </div>
         </div>
 
-        {/* Телефон */}
-        <a
-          href="tel:+79300632370"
-          className="group rounded-3xl p-6 md:p-7 border flex items-start gap-4 transition-all duration-200 hover:scale-[1.01] hover:shadow-lg"
-          style={{
-            background: 'var(--color-surface)',
-            borderColor: 'var(--color-border)',
-            textDecoration: 'none',
-          }}
+        {/* Телефон + WhatsApp + Telegram */}
+        <div
+          className="rounded-3xl p-6 md:p-7 border flex flex-col gap-4 transition-all duration-200 hover:shadow-lg"
+          style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
         >
-          <span
-            className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white"
-            style={{ background: 'linear-gradient(135deg, #0066ff 0%, #00b4ff 100%)' }}
-            aria-hidden
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z" />
-            </svg>
-          </span>
-          <div className="flex-1 min-w-0">
-            <p
-              className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-1.5 opacity-60"
-              style={{ color: 'var(--color-text)' }}
+          <div className="flex items-start gap-4">
+            <span
+              className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white"
+              style={{ background: 'linear-gradient(135deg, #0066ff 0%, #00b4ff 100%)' }}
+              aria-hidden
             >
-              Телефон
-            </p>
-            <p
-              className="text-[20px] leading-snug font-bold mb-1 group-hover:opacity-80 transition-opacity"
-              style={{ color: 'var(--color-text)' }}
-            >
-              +7 930 063-23-70
-            </p>
-            <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
-              Звонки и WhatsApp
-            </p>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <div className="flex-1 min-w-0">
+              <p
+                className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-1.5 opacity-60"
+                style={{ color: 'var(--color-text)' }}
+              >
+                Телефон
+              </p>
+              <a
+                href="tel:+79300632370"
+                className="block text-[20px] leading-snug font-bold mb-1 transition-opacity hover:opacity-70"
+                style={{ color: 'var(--color-text)', textDecoration: 'none' }}
+              >
+                +7 930 063-23-70
+              </a>
+              <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+                Звонки и сообщения в мессенджерах
+              </p>
+            </div>
           </div>
-        </a>
+
+          {/* WhatsApp + Telegram — быстрые мессенджер-кнопки */}
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <a
+              href="https://wa.me/79300632370"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Написать в WhatsApp"
+              className="group flex items-center justify-center gap-2 py-2.5 rounded-2xl text-white text-[13px] font-semibold transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
+              style={{
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                boxShadow: '0 4px 12px rgba(37,211,102,0.30)',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.768.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.464 3.488"/>
+              </svg>
+              WhatsApp
+            </a>
+            <a
+              href="https://t.me/mobileaxorel"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Написать в Telegram"
+              className="group flex items-center justify-center gap-2 py-2.5 rounded-2xl text-white text-[13px] font-semibold transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
+              style={{
+                background: 'linear-gradient(135deg, #229ED9 0%, #54A9EB 100%)',
+                boxShadow: '0 4px 12px rgba(34,158,217,0.30)',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+              Telegram
+            </a>
+          </div>
+        </div>
 
         {/* Email + Соц */}
         <div
@@ -190,7 +224,8 @@ export default function ContactsPage() {
           </a>
 
           {/* Соцсети — три кнопки в ряд с фирменными цветами и SVG-иконками */}
-          <div className="grid grid-cols-3 gap-2">
+          {/* Соцсети: VK + MAX (Telegram перенесён в карточку «Телефон») */}
+          <div className="grid grid-cols-2 gap-2">
             <a
               href="https://vk.com/mobileaxorel"
               target="_blank"
@@ -199,25 +234,10 @@ export default function ContactsPage() {
               className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
               style={{ background: '#0077FF', boxShadow: '0 4px 12px rgba(0,119,255,0.25)' }}
             >
-              {/* Официальный VK glyph (simpleicons.org/vk) */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M21.547 6.4a1.04 1.04 0 0 0-1.024-.8h-2.36c-.55 0-.886.196-1.077.65 0 0-1.45 3.07-3.07 5.16-.51.51-.74.673-1.018.673-.14 0-.342-.163-.342-.62V6.4c0-.547-.16-.8-.617-.8H8.31c-.342 0-.547.262-.547.51 0 .518.776.638.856 2.105v3.176c0 .697-.125.823-.404.823-.74 0-2.6-3.083-3.7-6.617-.215-.6-.43-.8-.984-.8H1.176c-.547 0-.66.262-.66.51 0 .57.74 3.86 3.84 8.21 2.066 2.974 4.99 4.583 7.65 4.583 1.6 0 1.797-.357 1.797-.886v-2.05c0-.6.127-.717.55-.717.31 0 .855.16 2.123 1.376 1.45 1.45 1.69 2.105 2.5 2.105h2.36c.547 0 .823-.275.665-.815-.345-1.066-2.66-3.26-2.764-3.404-.275-.345-.197-.5 0-.823 0 0 2.2-3.097 2.43-4.143z"/>
               </svg>
               <span className="text-[12px] font-semibold">VK</span>
-            </a>
-            <a
-              href="https://t.me/mobileaxorel"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Telegram"
-              className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
-              style={{ background: '#229ED9', boxShadow: '0 4px 12px rgba(34,158,217,0.25)' }}
-            >
-              {/* Официальный Telegram paper-plane glyph (simpleicons.org/telegram) */}
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-              </svg>
-              <span className="text-[12px] font-semibold">Telegram</span>
             </a>
             <a
               href="https://max.ru/mobileaxorel"
@@ -230,7 +250,6 @@ export default function ContactsPage() {
                 boxShadow: '0 4px 12px rgba(255,61,90,0.30)',
               }}
             >
-              {/* MAX (vk-messenger): жирная буква М в скруглённом квадрате */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M4.5 4.5h2.6L12 12.3l4.9-7.8h2.6V19.5h-2.6V9.4l-4.9 7.7-4.9-7.7v10.1H4.5z" />
               </svg>

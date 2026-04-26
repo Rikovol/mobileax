@@ -10,6 +10,8 @@ const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID || '';
 const RATE_LIMIT_MS = 60_000;
 const STORAGE_KEY = 'mobileax_msg_last_sent_at';
 const USER_KEY = 'mobileax_msg_user';
+const ANON_COUNT_KEY = 'mobileax_msg_anon_count';
+const MAX_ANON_MESSAGES = 2;
 
 /**
  * Маска российского мобильного: 7 (9XX) XXX-XX-XX или 8 (9XX) XXX-XX-XX.
@@ -242,6 +244,22 @@ export default function MessageWidget() {
       return;
     }
 
+    // Лимит на анонимные сообщения: после MAX_ANON_MESSAGES требуется авторизация.
+    // Применяем только если хотя бы один auth-провайдер настроен — иначе пользователь
+    // не сможет войти и застрянет (graceful degradation до получения VK/TG credentials).
+    const anonAuthAvailable =
+      authStatus?.vk_available || authStatus?.telegram_available;
+    if (!me && anonAuthAvailable && typeof window !== 'undefined') {
+      const count = Number(localStorage.getItem(ANON_COUNT_KEY) || '0');
+      if (count >= MAX_ANON_MESSAGES) {
+        setErrorMsg(
+          `Вы уже отправили ${MAX_ANON_MESSAGES} сообщения как гость. Войдите через VK или Telegram, чтобы продолжить.`,
+        );
+        setSubmitState('error');
+        return;
+      }
+    }
+
     if (typeof window !== 'undefined') {
       const last = Number(localStorage.getItem(STORAGE_KEY) || '0');
       const wait = RATE_LIMIT_MS - (Date.now() - last);
@@ -300,6 +318,12 @@ export default function MessageWidget() {
               email: email.trim() || undefined,
             }),
           );
+          // Счётчик анонимных сообщений (для лимита перед обязательной auth).
+          // У авторизованных через VK/TG visitor'ов лимита нет.
+          if (!me) {
+            const cur = Number(localStorage.getItem(ANON_COUNT_KEY) || '0');
+            localStorage.setItem(ANON_COUNT_KEY, String(cur + 1));
+          }
         } catch {
           /* ignore */
         }
@@ -321,6 +345,21 @@ export default function MessageWidget() {
 
   const showAuthBlock =
     !me && (authStatus?.vk_available || authStatus?.telegram_available);
+
+  // Сколько анонимных сообщений уже отправлено с этого устройства.
+  // Используется для inline-warning над формой при приближении к лимиту.
+  const [anonCount, setAnonCount] = useState(0);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    setAnonCount(Number(localStorage.getItem(ANON_COUNT_KEY) || '0'));
+  }, [open, submitState]);
+  const anonLimitWarning =
+    !me &&
+    showAuthBlock &&
+    anonCount >= MAX_ANON_MESSAGES - 1 &&
+    anonCount < MAX_ANON_MESSAGES
+      ? `Это ваше ${anonCount === 1 ? 'второе' : 'последнее'} сообщение без входа. Дальше потребуется VK или Telegram.`
+      : null;
 
   return (
     <>
@@ -565,6 +604,15 @@ export default function MessageWidget() {
                   aria-hidden
                   style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
                 />
+
+                {anonLimitWarning && submitState !== 'error' && (
+                  <div
+                    className="text-[12px] rounded-lg p-2.5"
+                    style={{ background: 'rgba(245, 158, 11, 0.10)', color: '#92400e' }}
+                  >
+                    ⓘ {anonLimitWarning}
+                  </div>
+                )}
 
                 {submitState === 'error' && errorMsg && (
                   <div
