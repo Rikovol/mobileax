@@ -7,6 +7,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_PHONEBASE_API || '';
 const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID || '';
 const RATE_LIMIT_MS = 60_000;
 const STORAGE_KEY = 'mobileax_msg_last_sent_at';
+const USER_KEY = 'mobileax_msg_user'; // {name, phone, email} — для prefill между визитами
 
 /** Глобальный CustomEvent для открытия виджета с предзаполненными полями.
  *  Источник: кнопка «Купить» в карточке товара, любые другие триггеры.
@@ -52,6 +53,21 @@ export default function MessageWidget() {
     if (open) openedAtRef.current = Date.now();
   }, [open]);
 
+  // Prefill из localStorage при первом монтировании (если пользователь уже писал)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem(USER_KEY);
+      if (!raw) return;
+      const stored = JSON.parse(raw) as { name?: string; phone?: string; email?: string };
+      if (stored.name) setName(stored.name);
+      if (stored.phone) setPhone(stored.phone);
+      if (stored.email) setEmail(stored.email);
+    } catch {
+      // битый JSON — игнорируем
+    }
+  }, []);
+
   // Подписываемся на CustomEvent от других компонентов (кнопка «Купить» и т.п.)
   useEffect(() => {
     const handler = (e: Event) => {
@@ -93,6 +109,9 @@ export default function MessageWidget() {
     setErrorMsg('');
   };
 
+  // reset очищает всё, включая контакты — но мы не используем reset() после
+  // успеха, чтобы prefill между обращениями работал. Оставляем для будущих
+  // ручных «Очистить» кнопок если понадобятся.
   const reset = () => {
     setName('');
     setPhone('');
@@ -102,6 +121,7 @@ export default function MessageWidget() {
     setMessageType('contact');
     setSubject('');
   };
+  void reset; // подавляем unused warning, функция оставлена в API намеренно
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,12 +173,29 @@ export default function MessageWidget() {
       }
       if (typeof window !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, String(Date.now()));
+        // Сохраняем контактные данные для prefill при следующем открытии
+        try {
+          localStorage.setItem(
+            USER_KEY,
+            JSON.stringify({
+              name: name.trim(),
+              phone: phone.trim(),
+              email: email.trim() || undefined,
+            }),
+          );
+        } catch {
+          // localStorage может быть заполнен — не критично
+        }
       }
       setSubmitState('success');
-      // Через 4 сек автозакрытие + сброс полей
+      // Через 4 сек автозакрытие. Имя/телефон/email НЕ сбрасываем —
+      // следующее открытие виджета подхватит их из state, body/subject — нет.
       setTimeout(() => {
         close();
-        reset();
+        setBody('');
+        setSubject('');
+        setHoney('');
+        setMessageType('contact');
       }, 4000);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Не удалось отправить сообщение';
