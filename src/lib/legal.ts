@@ -57,7 +57,7 @@ export const LEGAL = {
   },
 
   // Соцсети и Я.Карты
-  vkUrl: 'https://vk.com/mobileaxorel',
+  vkUrl: 'https://vk.ru/mobileaxorel',
   telegramUrl: 'https://t.me/mobileaxorel',
   yandexMapsUrl: 'https://yandex.ru/maps/org/mobilaks/1149010257/',
   yandexOrgId: '1149010257',

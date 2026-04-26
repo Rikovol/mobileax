@@ -22,9 +22,9 @@ const ORGANIZATION_SCHEMA = {
     opens: '09:00',
     closes: '19:00',
   },
-  sameAs: ['https://vk.com/mobileaxorel', 'https://t.me/mobileaxorel'],
+  sameAs: ['https://vk.ru/mobileaxorel', 'https://t.me/mobileaxorel'],
   founder: 'ИП Васильев П.В.',
-  foundingDate: '2015',
+  foundingDate: '2010',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '4.9',

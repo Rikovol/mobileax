@@ -193,7 +193,7 @@ export default function Header() {
           {/* Социальные сети — VK / Telegram / MAX */}
           <div className="mt-5 flex gap-3">
             <a
-              href="https://vk.com/mobileaxorel"
+              href="https://vk.ru/mobileaxorel"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="VK"

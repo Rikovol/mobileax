@@ -113,7 +113,7 @@ export default function Footer() {
             {/* Socials */}
             <div className="flex gap-3 mt-5">
               <Link
-                href="https://vk.com/mobileaxorel"
+                href="https://vk.ru/mobileaxorel"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="ВКонтакте"
@@ -164,7 +164,7 @@ export default function Footer() {
         {/* Divider + fine print */}
         <div className="mt-12 pt-6 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-3" style={{ borderColor: 'var(--color-border-light)' }}>
           <p className="text-[11px]" style={{ color: 'var(--color-text-secondary)', opacity: 0.7 }}>
-            &copy; 2015–{new Date().getFullYear()} {theme.name}. {legalShortLine()}
+            &copy; 2010–{new Date().getFullYear()} {theme.name}. {legalShortLine()}
           </p>
           <div className="flex gap-4">
             <Link href="/privacy" className="text-[11px] transition-colors hover:opacity-80" style={{ color: 'var(--color-text-secondary)', opacity: 0.7 }}>

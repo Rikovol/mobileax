@@ -224,36 +224,43 @@ export default function ContactsPage() {
           </a>
 
           {/* Соцсети — три кнопки в ряд с фирменными цветами и SVG-иконками */}
-          {/* Соцсети: VK + MAX (Telegram перенесён в карточку «Телефон») */}
+          {/* Соцсети: VK + MAX. Официальные brand-цвета и логотипы. */}
           <div className="grid grid-cols-2 gap-2">
             <a
-              href="https://vk.com/mobileaxorel"
+              href="https://vk.ru/mobileaxorel"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="VK"
-              className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
-              style={{ background: '#0077FF', boxShadow: '0 4px 12px rgba(0,119,255,0.25)' }}
+              className="group flex items-center justify-center gap-2 py-2.5 rounded-2xl text-white text-[13px] font-semibold transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
+              style={{
+                background: 'linear-gradient(135deg, #0077FF 0%, #2787F5 100%)',
+                boxShadow: '0 4px 12px rgba(0,119,255,0.30)',
+              }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M21.547 6.4a1.04 1.04 0 0 0-1.024-.8h-2.36c-.55 0-.886.196-1.077.65 0 0-1.45 3.07-3.07 5.16-.51.51-.74.673-1.018.673-.14 0-.342-.163-.342-.62V6.4c0-.547-.16-.8-.617-.8H8.31c-.342 0-.547.262-.547.51 0 .518.776.638.856 2.105v3.176c0 .697-.125.823-.404.823-.74 0-2.6-3.083-3.7-6.617-.215-.6-.43-.8-.984-.8H1.176c-.547 0-.66.262-.66.51 0 .57.74 3.86 3.84 8.21 2.066 2.974 4.99 4.583 7.65 4.583 1.6 0 1.797-.357 1.797-.886v-2.05c0-.6.127-.717.55-.717.31 0 .855.16 2.123 1.376 1.45 1.45 1.69 2.105 2.5 2.105h2.36c.547 0 .823-.275.665-.815-.345-1.066-2.66-3.26-2.764-3.404-.275-.345-.197-.5 0-.823 0 0 2.2-3.097 2.43-4.143z"/>
+              {/* VK официальный wordmark — закруглённый «V» (vk.com/brand). */}
+              <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden>
+                <path d="M16 31.5C24.56 31.5 31.5 24.56 31.5 16S24.56.5 16 .5.5 7.44.5 16 7.44 31.5 16 31.5z" fill="rgba(255,255,255,0.18)"/>
+                <path d="M17.05 22.62c-7.07 0-11.41-4.86-11.59-12.94h3.6c.13 5.94 2.78 8.46 4.85 8.97V9.68h3.43v5.18c2.01-.22 4.13-2.55 4.85-5.18h3.39c-.55 3.24-2.85 5.57-4.49 6.53 1.64.78 4.27 2.81 5.28 6.41h-3.74c-.79-2.43-2.74-4.31-5.28-4.57v4.57h-.3z"/>
               </svg>
-              <span className="text-[12px] font-semibold">VK</span>
+              VK
             </a>
             <a
               href="https://max.ru/mobileaxorel"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="MAX"
-              className="group flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white transition-all duration-200 hover:scale-[1.04] active:scale-[0.97]"
+              className="group flex items-center justify-center gap-2 py-2.5 rounded-2xl text-white text-[13px] font-semibold transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
               style={{
-                background: 'linear-gradient(135deg, #ff3d5a 0%, #ff5e7a 100%)',
-                boxShadow: '0 4px 12px rgba(255,61,90,0.30)',
+                background: 'linear-gradient(135deg, #6B40FF 0%, #B649FF 100%)',
+                boxShadow: '0 4px 12px rgba(107,64,255,0.30)',
               }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M4.5 4.5h2.6L12 12.3l4.9-7.8h2.6V19.5h-2.6V9.4l-4.9 7.7-4.9-7.7v10.1H4.5z" />
+              {/* MAX (мессенджер от VK Group) — буква M в скруглённом квадрате. */}
+              <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden>
+                <path d="M16 31.5C24.56 31.5 31.5 24.56 31.5 16S24.56.5 16 .5.5 7.44.5 16 7.44 31.5 16 31.5z" fill="rgba(255,255,255,0.18)"/>
+                <path d="M8.6 23V9h3.05l4.35 7.1L20.35 9h3.05v14h-3.2v-8.6l-4.2 6.6-4.2-6.6V23H8.6z"/>
               </svg>
-              <span className="text-[12px] font-semibold">MAX</span>
+              MAX
             </a>
           </div>
         </div>

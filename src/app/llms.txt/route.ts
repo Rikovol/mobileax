@@ -22,7 +22,7 @@ export async function GET() {
   lines.push('- **Телефон:** +7 930 063-23-70');
   lines.push('- **Часы работы:** Пн–Вс 09:00–19:00 (без выходных)');
   lines.push('- **Email:** info@mobileax.ru');
-  lines.push('- **VK:** https://vk.com/mobileaxorel');
+  lines.push('- **VK:** https://vk.ru/mobileaxorel');
   lines.push('- **Telegram:** https://t.me/mobileaxorel');
   lines.push('- **Юр. лицо:** ИП Васильев Павел Владимирович, с 2015 года');
   lines.push('- **Yandex.Карты:** https://yandex.ru/maps/org/mobilaks/1149010257/');
