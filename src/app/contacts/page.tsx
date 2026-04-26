@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { LEGAL } from '@/lib/legal';
 
 export const metadata: Metadata = {
   title: 'Контакты — МобилАкс в Орле',
@@ -242,16 +243,24 @@ export default function ContactsPage() {
             className="px-6 md:px-7 pb-6 md:pb-7 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-[14px]"
             style={{ color: 'var(--color-text)' }}
           >
-            <Field label="Полное наименование" value="Индивидуальный предприниматель Васильев Павел Владимирович" />
-            <Field label="Сокращённое" value="ИП Васильев П. В." />
-            <Field label="ОГРНИП" value="315574500000826" />
-            <Field label="ИНН" value="572005412882" />
-            <Field label="Дата регистрации" value="с 2015 года" />
-            <Field label="Юридический адрес" value="г. Орёл, ул. Автовокзальная, д. 1" />
-            <Field label="Фактический адрес" value="г. Орёл, ул. Автовокзальная, д. 1" />
-            <Field label="Телефон" value="+7 930 063-23-70" />
-            <Field label="Email" value="info@mobileax.ru" />
-            <Field label="Налоговый режим" value="УСН" />
+            <Field label="Полное наименование" value={LEGAL.fullName} />
+            <Field label="Сокращённое" value={LEGAL.shortName} />
+            <Field label="Вид предпринимательства" value="Индивидуальный предприниматель" />
+            <Field label="ОГРНИП" value={LEGAL.ogrnip} />
+            <Field label="ИНН" value={LEGAL.inn} />
+            <Field label="Дата регистрации ИП" value={LEGAL.registrationDate} />
+            <Field label="Постановка на налоговый учёт" value={LEGAL.taxRegistrationDate} />
+            <Field label="Налоговый орган" value={LEGAL.taxAuthority} />
+            <Field label="Налоговый режим" value={LEGAL.taxRegime} />
+            <Field label="ОКПО" value={LEGAL.okpo} />
+            <Field label="ОКАТО" value={LEGAL.okato} />
+            <Field label="ОКТМО" value={LEGAL.oktmo} />
+            <Field label="Регистрационный номер ПФР" value={LEGAL.pfrRegNumber} />
+            <Field label="Дата регистрации в ПФР" value={LEGAL.pfrRegistrationDate} />
+            <Field label="Юридический адрес" value={LEGAL.legalAddress} />
+            <Field label="Фактический адрес" value={LEGAL.actualAddress} />
+            <Field label="Телефон" value={LEGAL.phone} />
+            <Field label="Email" value={LEGAL.email} />
           </div>
         </details>
       </section>

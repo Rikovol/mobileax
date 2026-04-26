@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getActiveTheme } from '@/lib/theme-resolver';
+import { legalShortLine } from '@/lib/legal';
 
 const theme = getActiveTheme();
 
@@ -160,7 +161,7 @@ export default function Footer() {
         {/* Divider + fine print */}
         <div className="mt-12 pt-6 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-3" style={{ borderColor: 'var(--color-border-light)' }}>
           <p className="text-[11px]" style={{ color: 'var(--color-text-secondary)', opacity: 0.7 }}>
-            &copy; 2015–{new Date().getFullYear()} {theme.name}. ИП Васильев П.В. ОГРН 315574900011628. ИНН 575002497083
+            &copy; 2015–{new Date().getFullYear()} {theme.name}. {legalShortLine()}
           </p>
           <div className="flex gap-4">
             <Link href="/privacy" className="text-[11px] transition-colors hover:opacity-80" style={{ color: 'var(--color-text-secondary)', opacity: 0.7 }}>
