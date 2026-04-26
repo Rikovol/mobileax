@@ -155,22 +155,22 @@ export default function CategoryGrid() {
                     key={cat.slug}
                     href={categoryUrl(cat)}
                     data-category-card
-                    className="group relative flex flex-col flex-shrink-0 rounded-3xl overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
+                    className="group relative flex flex-col flex-shrink-0 rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
                     style={{
                       background: colors.bg,
-                      width: 'clamp(180px, 50vw, 240px)',
-                      height: 280,
+                      width: 'clamp(130px, 32vw, 170px)',
+                      height: 200,
                       scrollSnapAlign: 'start',
                       textDecoration: 'none',
                     }}
                     aria-label={cat.label}
                   >
                     {/* Label — top */}
-                    <div className="relative z-10 p-5">
+                    <div className="relative z-10 px-4 pt-4">
                       <h3
                         className="font-semibold leading-tight tracking-tight"
                         style={{
-                          fontSize: 'clamp(1rem, 1.6vw, 1.125rem)',
+                          fontSize: '0.9375rem',
                           letterSpacing: '-0.02em',
                           color: dark ? '#f5f5f7' : '#1d1d1f',
                         }}
@@ -186,7 +186,7 @@ export default function CategoryGrid() {
                         alt={cat.label}
                         fill
                         className="object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.04]"
-                        sizes="240px"
+                        sizes="170px"
                       />
                     </div>
                   </Link>
